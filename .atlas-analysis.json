@@ -1,0 +1,93 @@
+{
+  "projectType": "saas",
+  "projectName": "Open Higgsfield AI",
+  "projectDescription": "Open-source AI image and video generation studio with 200+ models including Flux, SDXL, Midjourney, Kling, and Sora",
+  "theme": "almond",
+  "primaryColor": "#338dcc",
+  "lightColor": "#223950",
+  "darkColor": null,
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "installation"
+            ]
+          },
+          {
+            "group": "Core Features",
+            "pages": [
+              "features/image-studio",
+              "features/video-studio",
+              "features/cinema-studio",
+              "features/multi-image-input",
+              "features/upload-history",
+              "features/generation-history"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/model-selection",
+              "guides/api-configuration",
+              "guides/self-hosting",
+              "guides/camera-controls"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "API Client",
+            "pages": [
+              "api/muapi-client",
+              "api/model-catalog",
+              "api/upload-api"
+            ]
+          },
+          {
+            "group": "Models",
+            "pages": [
+              "api/models/text-to-image",
+              "api/models/image-to-image",
+              "api/models/text-to-video",
+              "api/models/image-to-video"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "200+ AI models for image and video generation",
+    "Multi-image input support (up to 14 reference images)",
+    "Three studio modes: Image, Video, and Cinema",
+    "Professional camera controls for cinematic shots",
+    "Self-hosted with local storage",
+    "Upload and generation history management",
+    "Responsive dark mode UI with glassmorphism design",
+    "Integration with Muapi.ai API gateway"
+  ],
+  "publicApiSurface": [
+    "MuapiClient.generateImage()",
+    "MuapiClient.generateVideo()",
+    "MuapiClient.generateI2I()",
+    "MuapiClient.generateI2V()",
+    "MuapiClient.uploadFile()",
+    "t2iModels array (50+ text-to-image models)",
+    "i2iModels array (55+ image-to-image models)",
+    "t2vModels array (40+ text-to-video models)",
+    "i2vModels array (60+ image-to-video models)",
+    "getModelById()",
+    "getVideoModelById()",
+    "getI2IModelById()",
+    "getI2VModelById()"
+  ]
+}
