@@ -1,0 +1,310 @@
+---
+title: 'Text-to-Image Models'
+description: 'Generate images from text prompts using 50+ state-of-the-art models'
+icon: 'image'
+---
+
+## Overview
+
+The Text-to-Image API provides access to 50+ cutting-edge models that generate images from text descriptions. From photorealistic renders to artistic styles, these models cover a wide range of creative use cases.
+
+<Note>
+Text-to-image models are automatically selected when no reference image is provided in the Image Studio.
+</Note>
+
+## Model Categories
+
+<AccordionGroup>
+  <Accordion title="Flux Models" icon="bolt">
+    High-quality photorealistic generation with fast inference times.
+    
+    - **Flux Dev** — Developer-grade quality with balanced speed
+    - **Flux Schnell** — Ultra-fast generation for rapid prototyping
+    - **Flux Dev Lora** — Custom LoRA support for style transfer
+    - **Flux Kontext Dev/Pro/Max** — Context-aware generation
+    - **Flux 2 Dev/Flex/Pro** — Next-generation models with enhanced detail
+    - **Flux 2 Klein 4b/9b** — Lightweight models for cute and clean illustration styles
+    - **Flux Pulid** — Identity-preserving generation
+    - **Flux Redux** — Reimagine and transform existing compositions
+    - **Flux Krea Dev** — Cinematic realism and shallow depth of field
+  </Accordion>
+
+  <Accordion title="Proprietary Models" icon="crown">
+    Industry-leading commercial models with exceptional quality.
+    
+    - **Midjourney v7** — Cinematic composition with variety, stylization, and weirdness controls
+    - **Google Imagen4** (Standard/Fast/Ultra) — Photorealistic quality from Google
+    - **GPT-4o Text-to-Image** — OpenAI's vision model for diagram and illustration generation
+    - **Ideogram v3** — Text rendering and typography specialist
+    - **Leonardo AI Phoenix 1.0 & Lucid Origin** — Fantasy and concept art
+    - **Grok Imagine** — X.AI's creative generation model
+  </Accordion>
+
+  <Accordion title="Open Source Models" icon="code">
+    High-performance open models for production use.
+    
+    - **SDXL Image** — Stable Diffusion XL base model
+    - **Hunyuan Image 2.1 & 3.0** — Tencent's multilingual models
+    - **Qwen Image & 2512** — Alibaba's vision models
+    - **Chroma Image** — Vibrant chromatic generation
+    - **Hidream I1 Fast/Dev/Full** — Cartoon and illustration styles
+    - **Z Image Turbo/Base** — Fast and flexible generation
+    - **Perfect Pony XL** — Specialized for equine subjects
+    - **Neta Lumina** — Anime and character art
+  </Accordion>
+
+  <Accordion title="Specialized Models" icon="sparkles">
+    Domain-specific models for niche use cases.
+    
+    - **Nano Banana & Nano Banana 2** — Multi-resolution with Google Search enhancement
+    - **Nano Banana Pro** — Professional-grade with 1K/2K/4K resolution options
+    - **Seedream 5.0** — ByteDance's latest with quality presets
+    - **Bytedance Seedream v3/v4/v4.5** — Dreamlike aesthetics
+    - **Wan2.1/2.5/2.6** — Realistic skin textures and portrait generation
+    - **AI Anime Generator** — Specialized anime and manga styles
+    - **Kling O1 & Vidu Q2** — High-resolution cinematic stills
+    - **Reve Text-to-Image** — Photorealistic fantasy portraits
+  </Accordion>
+</AccordionGroup>
+
+## Popular Models
+
+| Model | Resolution | Aspect Ratios | Speed | Best For |
+|-------|-----------|---------------|-------|----------|
+| **Nano Banana 2** | 1K/2K/4K | 15+ ratios + auto | Fast | Production work with Google Search enhancement |
+| **Seedream 5.0** | Up to 4K | 8 ratios | Fast | High-quality stylized images |
+| **Flux Dev** | Up to 2048px | Flexible (width/height) | Medium | Photorealistic generation |
+| **Midjourney v7** | Variable | 11 ratios | Slow/Fast/Turbo | Cinematic and artistic compositions |
+| **Google Imagen4** | Variable | 5 ratios | Medium | Google-grade photorealism |
+| **Ideogram v3** | Variable | 5 ratios | Turbo/Balanced/Quality | Typography and text rendering |
+| **Flux 2 Pro** | Up to 1536px | 7 ratios | Medium | Next-gen detail and coherence |
+| **Kling O1** | 1K/2K | 8 ratios | Medium | Cinematic ultra-detailed renders |
+
+## Newly Added Models
+
+<Tip>
+These models were recently added to the platform and offer cutting-edge capabilities.
+</Tip>
+
+### Nano Banana 2
+
+**Family:** Nano  
+**Resolution:** 1K / 2K / 4K  
+**Aspect Ratios:** 1:1, 1:4, 1:8, 2:3, 3:2, 3:4, 4:1, 4:3, 4:5, 5:4, 8:1, 9:16, 16:9, 21:9, **auto**
+
+<Accordion title="Features">
+- Powered by Google Gemini 3.1 Flash Image
+- Google Search enhancement for prompt enrichment
+- Auto aspect ratio detection
+- Multiple output formats (JPG, PNG)
+- Resolution scaling from 1K to 4K
+</Accordion>
+
+```json Example Request
+{
+  "model": "nano-banana-2",
+  "prompt": "A futuristic cityscape with glowing neon lights reflected in rain-soaked streets, ultra-detailed 4K photography.",
+  "aspect_ratio": "auto",
+  "resolution": "4k",
+  "google_search": true
+}
+```
+
+### Seedream 5.0
+
+**Family:** Seedream  
+**Quality:** Basic / High  
+**Aspect Ratios:** 1:1, 16:9, 9:16, 4:3, 3:4, 2:3, 3:2, 21:9
+
+<Accordion title="Features">
+- ByteDance's latest generation model
+- Quality presets for basic and high-fidelity outputs
+- Wide aspect ratio support
+- Natural language style descriptions
+</Accordion>
+
+```json Example Request
+{
+  "model": "seedream-5.0",
+  "prompt": "A futuristic city with soaring crystalline towers, suspended gardens, and neon-lit skyways under a twin-moon sky, captured in a cinematic, high-detail digital art style.",
+  "aspect_ratio": "16:9",
+  "quality": "high"
+}
+```
+
+## Common Input Parameters
+
+### Prompt
+
+**Type:** `string`  
+**Required:** Yes  
+**Max Length:** 2–3000 characters (varies by model)
+
+Text description of the image you want to generate. The more detailed and specific, the better the results.
+
+<Tip>
+For best results, include:
+- Subject description
+- Style or artistic direction
+- Lighting and atmosphere
+- Composition details
+- Technical specifications (e.g., "8K", "cinematic", "photorealistic")
+</Tip>
+
+### Aspect Ratio
+
+**Type:** `string`  
+**Options:** Varies by model (typically 1:1, 16:9, 9:16, 4:3, 3:4, 21:9, etc.)
+
+Defines the width-to-height ratio of the generated image. Some models support 15+ ratios, including ultra-wide (21:9) and auto-detection.
+
+### Resolution / Quality
+
+Some models offer resolution presets:
+
+- **Resolution-based:** `1k`, `2k`, `4k`, `480p`, `720p`, `1080p`
+- **Quality-based:** `basic`, `high`, `medium`, `low`, `turbo`, `balanced`, `quality`
+- **Dimension-based:** Width/Height in pixels (must be divisible by 64 for Flux models)
+
+<Note>
+Higher resolutions and quality settings consume more credits and take longer to generate.
+</Note>
+
+### Number of Images
+
+**Type:** `integer`  
+**Range:** 1–4 (varies by model)  
+**Default:** 1
+
+Generate multiple variations in a single request. Each image is charged separately.
+
+## Model-Specific Parameters
+
+<AccordionGroup>
+  <Accordion title="Midjourney v7 — Advanced Controls">
+    
+    **Speed:** `relaxed` | `fast` | `turbo`  
+    Controls generation priority and speed.
+    
+    **Variety:** 0–100 (step: 5)  
+    Higher values create more diverse results; lower values create consistency.
+    
+    **Stylization:** 0–1000  
+    Intensity of artistic style. Higher = more stylized; lower = more realistic.
+    
+    **Weirdness:** 0–3000  
+    Creativity and uniqueness. Higher = unusual; lower = conventional.
+  </Accordion>
+
+  <Accordion title="Flux Dev Lora — Custom Style Transfer">
+    
+    **Model ID:** Array of LoRA models from Civitai
+    
+    ```json
+    {
+      "model_id": [
+        {
+          "model": "civitai:119351@317153",
+          "weight": 1.0
+        }
+      ]
+    }
+    ```
+    
+    Each LoRA can have a weight between 0–4. Maximum 4 models per request.
+  </Accordion>
+
+  <Accordion title="Ideogram v3 — Typography Specialist">
+    
+    **Render Speed:** `Turbo` | `Balanced` | `Quality`  
+    
+    **Style:** `Auto` | `General` | `Realistic` | `Design`  
+    Presets optimized for different use cases.
+  </Accordion>
+
+  <Accordion title="Google Imagen4 — Variants">
+    
+    - **Imagen4** — Standard quality
+    - **Imagen4 Fast** — Faster inference
+    - **Imagen4 Ultra** — Maximum quality (longer generation)
+  </Accordion>
+</AccordionGroup>
+
+## Example Prompts
+
+<AccordionGroup>
+  <Accordion title="Photorealistic Portrait">
+    ```text
+    A young woman with freckles and natural makeup, standing in soft sunlight, 
+    sharp focus, DSLR photo style, ultra-realistic skin texture, 8K detail.
+    ```
+    **Recommended Models:** Flux Dev, Google Imagen4, Wan2.5
+  </Accordion>
+
+  <Accordion title="Cinematic Scene">
+    ```text
+    A sprawling futuristic city at dusk, illuminated with vibrant neon signs, 
+    layered skyscrapers, elevated highways with flying cars, warm atmospheric glow, 
+    ultra-detailed sci-fi architecture, cinematic composition, high contrast, 8K.
+    ```
+    **Recommended Models:** Midjourney v7, Kling O1, Flux 2 Pro
+  </Accordion>
+
+  <Accordion title="Anime Character">
+    ```text
+    A cheerful anime girl with short pink hair and green eyes, wearing a school uniform, 
+    standing under cherry blossom trees, soft lighting, anime style, digital painting.
+    ```
+    **Recommended Models:** AI Anime Generator, Neta Lumina, Hidream I1 Dev
+  </Accordion>
+
+  <Accordion title="Fantasy Concept Art">
+    ```text
+    A majestic elven queen standing in a glowing forest, wearing intricate golden armor 
+    with emerald details, sunlight rays filtering through the trees, ultra-detailed 
+    fantasy concept art, cinematic lighting, 8K render.
+    ```
+    **Recommended Models:** Leonardo AI Phoenix, Midjourney v7, Flux 2 Pro
+  </Accordion>
+</AccordionGroup>
+
+## API Endpoints
+
+All text-to-image models use the unified endpoint pattern:
+
+```bash
+POST /api/v1/{model-endpoint}
+```
+
+Refer to the [Generate Image](/api/generate/image) guide for integration details.
+
+## Model Selection Tips
+
+<Tip>
+**For production work:** Use Nano Banana 2, Flux Dev, or Seedream 5.0 for reliable quality and speed.
+
+**For creative exploration:** Try Midjourney v7, Leonardo AI models, or Bytedance Seedream variants.
+
+**For anime/illustration:** Use AI Anime Generator, Neta Lumina, or Hidream models.
+
+**For typography and text:** Use Ideogram v3 with Design or General style.
+
+**For maximum quality:** Use Google Imagen4 Ultra, Flux 2 Pro, or Kling O1 at 2K/4K resolution.
+</Tip>
+
+## Resolution Guide
+
+| Use Case | Recommended Resolution | Models |
+|----------|----------------------|--------|
+| Social media posts | 1K (1024×1024) | Most models |
+| Desktop wallpapers | 2K (2048×1152) | Nano Banana 2, Flux 2, Kling O1 |
+| Print quality | 4K (4096×2304) | Nano Banana 2, Seedream 5.0, Bytedance v4.5 |
+| Web thumbnails | 480p–720p | Google Imagen4 Fast, Flux Schnell |
+
+## Rate Limits
+
+Each model has different credit costs based on resolution and quality through the Muapi.ai API. Refer to the [Muapi.ai documentation](https://muapi.ai) for detailed pricing information.
+
+<Note>
+Generating multiple images in a single request (using `num_images` parameter) charges separately for each image.
+</Note>

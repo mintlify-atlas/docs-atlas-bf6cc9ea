@@ -1,0 +1,581 @@
+---
+title: Installation
+description: Detailed installation instructions, system requirements, and troubleshooting for Open Higgsfield AI
+---
+
+# Installation Guide
+
+This guide covers detailed installation steps, system requirements, environment configuration, and production deployment for Open Higgsfield AI.
+
+## System Requirements
+
+### Minimum Requirements
+
+<CardGroup cols={2}>
+  <Card title="Operating System" icon="desktop">
+    - macOS 10.15+
+    - Windows 10/11
+    - Linux (Ubuntu 20.04+, Debian, Fedora)
+  </Card>
+  <Card title="Runtime" icon="code">
+    - Node.js v18.0.0 or higher
+    - npm v9.0.0+ (comes with Node.js)
+  </Card>
+  <Card title="Browser" icon="browser">
+    - Chrome/Edge 90+
+    - Firefox 88+
+    - Safari 14+
+  </Card>
+  <Card title="Memory" icon="memory">
+    - 2GB RAM (4GB+ recommended)
+    - 200MB disk space for dependencies
+  </Card>
+</CardGroup>
+
+### Recommended Specifications
+
+For the best experience:
+
+- **CPU:** Multi-core processor (2+ cores)
+- **RAM:** 4GB+ for smooth multi-tab usage
+- **Network:** Stable internet connection (API calls to Muapi.ai)
+- **Display:** 1280×720 minimum resolution (1920×1080+ recommended)
+
+<Info>
+Open Higgsfield AI runs entirely in the browser. No GPU is required on your local machine — all AI inference happens on Muapi's servers.
+</Info>
+
+## Development Setup
+
+### Step 1: Install Node.js
+
+If you don't have Node.js installed:
+
+<Tabs>
+  <Tab title="macOS">
+    **Using Homebrew:**
+    ```bash
+    brew install node
+    ```
+
+    **Using the installer:**
+    1. Download from [nodejs.org](https://nodejs.org/)
+    2. Run the `.pkg` installer
+    3. Follow the installation wizard
+  </Tab>
+
+  <Tab title="Windows">
+    **Using the installer:**
+    1. Download from [nodejs.org](https://nodejs.org/)
+    2. Run the `.msi` installer
+    3. Follow the installation wizard
+    4. Restart your terminal
+
+    **Using Chocolatey:**
+    ```bash
+    choco install nodejs
+    ```
+  </Tab>
+
+  <Tab title="Linux">
+    **Ubuntu/Debian:**
+    ```bash
+    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+    ```
+
+    **Fedora:**
+    ```bash
+    sudo dnf install nodejs
+    ```
+
+    **Using nvm (recommended):**
+    ```bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+    nvm install 18
+    nvm use 18
+    ```
+  </Tab>
+</Tabs>
+
+Verify the installation:
+
+```bash
+node --version  # Should print v18.0.0 or higher
+npm --version   # Should print 9.0.0 or higher
+```
+
+### Step 2: Clone the Repository
+
+Clone Open Higgsfield AI from GitHub:
+
+<CodeGroup>
+```bash HTTPS
+git clone https://github.com/Anil-matcha/Open-Higgsfield-AI.git
+cd Open-Higgsfield-AI
+```
+
+```bash SSH
+git clone git@github.com:Anil-matcha/Open-Higgsfield-AI.git
+cd Open-Higgsfield-AI
+```
+
+```bash GitHub CLI
+gh repo clone Anil-matcha/Open-Higgsfield-AI
+cd Open-Higgsfield-AI
+```
+</CodeGroup>
+
+### Step 3: Install Dependencies
+
+Install the required npm packages:
+
+<CodeGroup>
+```bash npm
+npm install
+```
+
+```bash yarn
+yarn install
+```
+
+```bash pnpm
+pnpm install
+```
+</CodeGroup>
+
+This installs the following dependencies from `package.json`:
+
+```json
+{
+  "devDependencies": {
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "vite": "^5.4.0"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "@tailwindcss/vite": "^4.1.18"
+  }
+}
+```
+
+<Note>
+The project has minimal dependencies — just Vite for the build system and Tailwind CSS v4 for styling. No heavy frameworks!
+</Note>
+
+### Step 4: Start the Development Server
+
+Launch the Vite development server:
+
+<CodeGroup>
+```bash npm
+npm run dev
+```
+
+```bash yarn
+yarn dev
+```
+
+```bash pnpm
+pnpm dev
+```
+</CodeGroup>
+
+Vite will start the server and display:
+
+```
+VITE v5.4.0  ready in 234 ms
+
+➜  Local:   http://localhost:5173/
+➜  Network: use --host to expose
+➜  press h + enter to show help
+```
+
+<Tip>
+The development server includes hot module replacement (HMR), so your changes are reflected instantly without refreshing the page.
+</Tip>
+
+### Step 5: Access the Studio
+
+Open your browser and navigate to `http://localhost:5173`. You should see the Open Higgsfield AI interface with the API key authentication modal.
+
+## Vite Configuration
+
+The project uses a minimal Vite configuration with an important proxy setup:
+
+```javascript
+// vite.config.js
+import { defineConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+    plugins: [
+        tailwindcss(),
+    ],
+    server: {
+        proxy: {
+            '/api': {
+                target: 'https://api.muapi.ai',
+                changeOrigin: true,
+                secure: false
+            }
+        }
+    }
+});
+```
+
+### Why the Proxy?
+
+During development, the proxy routes all `/api` requests to `https://api.muapi.ai` to avoid CORS issues. The `muapi.js` client detects the environment and uses the appropriate base URL:
+
+```javascript
+// src/lib/muapi.js:6
+this.baseUrl = import.meta.env.DEV ? '' : 'https://api.muapi.ai';
+```
+
+- **Development:** Requests go to `/api/v1/...` → Vite proxy → `https://api.muapi.ai/api/v1/...`
+- **Production:** Requests go directly to `https://api.muapi.ai/api/v1/...`
+
+## Environment Configuration
+
+### API Key Storage
+
+Your Muapi API key is stored in the browser's `localStorage` under the key `muapi_key`:
+
+```javascript
+// src/components/AuthModal.js:50
+localStorage.setItem('muapi_key', key);
+
+// src/lib/muapi.js:10-12
+getKey() {
+    const key = localStorage.getItem('muapi_key');
+    if (!key) throw new Error('API Key missing. Please set it in Settings.');
+    return key;
+}
+```
+
+<Warning>
+Your API key is **never** sent to any server except Muapi.ai for authentication. It stays in your browser's localStorage and is not included in the source code or version control.
+</Warning>
+
+### Generation History
+
+Generation history is also stored in localStorage under the key `muapi_history`:
+
+```javascript
+// From project_knowledge.md:54-57
+// History:
+//   - Stored in localStorage key `muapi_history`
+//   - Slides in from the right sidebar
+//   - Thumbnails are clickable to re-view; hover to download
+```
+
+### Upload History
+
+Uploaded reference images are tracked in `uploadHistory.js` and stored locally:
+
+```javascript
+// src/lib/uploadHistory.js manages:
+// - localStorage CRUD operations
+// - Canvas thumbnail generation
+// - Upload history persistence
+```
+
+<Tip>
+To clear all data, open your browser's developer console and run:
+```javascript
+localStorage.clear();
+```
+Then refresh the page.
+</Tip>
+
+## Production Build
+
+### Building for Production
+
+Create an optimized production build:
+
+<CodeGroup>
+```bash npm
+npm run build
+```
+
+```bash yarn
+yarn build
+```
+
+```bash pnpm
+pnpm build
+```
+</CodeGroup>
+
+Vite will:
+
+1. Bundle and minify all JavaScript
+2. Process and optimize CSS with Tailwind
+3. Generate optimized assets
+4. Output everything to the `dist/` directory
+
+Expected output:
+
+```
+vite v5.4.0 building for production...
+✓ 142 modules transformed.
+dist/index.html                   1.23 kB │ gzip: 0.65 kB
+dist/assets/index-a3b4c5d6.css   45.67 kB │ gzip: 8.91 kB
+dist/assets/index-x7y8z9w0.js    89.34 kB │ gzip: 28.45 kB
+✓ built in 1.84s
+```
+
+### Preview the Production Build
+
+Test the production build locally:
+
+<CodeGroup>
+```bash npm
+npm run preview
+```
+
+```bash yarn
+yarn preview
+```
+
+```bash pnpm
+pnpm preview
+```
+</CodeGroup>
+
+Vite will serve the `dist/` folder at `http://localhost:4173`.
+
+## Deployment Options
+
+### Deploy to Vercel
+
+<Steps>
+  <Step title="Install Vercel CLI">
+    ```bash
+    npm install -g vercel
+    ```
+  </Step>
+  <Step title="Deploy">
+    ```bash
+    vercel
+    ```
+    Follow the prompts to link your project and deploy.
+  </Step>
+</Steps>
+
+### Deploy to Netlify
+
+<Steps>
+  <Step title="Build the project">
+    ```bash
+    npm run build
+    ```
+  </Step>
+  <Step title="Deploy the dist folder">
+    Drag and drop the `dist/` folder to [Netlify Drop](https://app.netlify.com/drop), or use the Netlify CLI:
+    ```bash
+    npm install -g netlify-cli
+    netlify deploy --prod --dir=dist
+    ```
+  </Step>
+</Steps>
+
+### Deploy to GitHub Pages
+
+<Steps>
+  <Step title="Update vite.config.js">
+    Add a `base` property for your repository:
+    ```javascript
+    export default defineConfig({
+        base: '/Open-Higgsfield-AI/',  // Your repo name
+        // ... rest of config
+    });
+    ```
+  </Step>
+  <Step title="Build and deploy">
+    ```bash
+    npm run build
+    npm install -g gh-pages
+    gh-pages -d dist
+    ```
+  </Step>
+</Steps>
+
+### Self-Hosting with Nginx
+
+<Steps>
+  <Step title="Build the project">
+    ```bash
+    npm run build
+    ```
+  </Step>
+  <Step title="Copy to web root">
+    ```bash
+    sudo cp -r dist/* /var/www/html/
+    ```
+  </Step>
+  <Step title="Configure Nginx">
+    Create `/etc/nginx/sites-available/openhiggsfield`:
+    ```nginx
+    server {
+        listen 80;
+        server_name your-domain.com;
+        root /var/www/html;
+        index index.html;
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+    }
+    ```
+  </Step>
+  <Step title="Enable and restart">
+    ```bash
+    sudo ln -s /etc/nginx/sites-available/openhiggsfield /etc/nginx/sites-enabled/
+    sudo systemctl restart nginx
+    ```
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+### Common Issues
+
+#### "API Key missing" Error
+
+**Symptom:** Error message when trying to generate.
+
+**Solution:**
+1. Open Settings from the header
+2. Clear any existing API key
+3. Close the settings modal
+4. Try generating again — the auth modal should appear
+5. Enter a valid Muapi API key starting with `sk-`
+
+#### CORS Errors in Development
+
+**Symptom:** Console errors about CORS when making API requests.
+
+**Solution:**
+Make sure the Vite proxy is configured correctly in `vite.config.js`:
+
+```javascript
+server: {
+    proxy: {
+        '/api': {
+            target: 'https://api.muapi.ai',
+            changeOrigin: true,
+            secure: false
+        }
+    }
+}
+```
+
+Restart the dev server after making changes.
+
+#### Blank Page After Build
+
+**Symptom:** Production build shows a blank page.
+
+**Solution:**
+If deploying to a subdirectory, add a `base` path to `vite.config.js`:
+
+```javascript
+export default defineConfig({
+    base: '/your-subdirectory/',
+    // ...
+});
+```
+
+#### Generation Hangs or Times Out
+
+**Symptom:** "Generating..." state never completes.
+
+**Solution:**
+1. Check your internet connection
+2. Verify your Muapi API key is valid and has credits
+3. Check the browser console for error messages
+4. The polling timeout is 2 minutes for images, 4 minutes for videos (see `muapi.js:120`)
+
+```javascript
+// src/lib/muapi.js:120
+async pollForResult(requestId, key, maxAttempts = 60, interval = 2000) {
+    // 60 attempts × 2 seconds = 2 minutes timeout
+```
+
+#### Port Already in Use
+
+**Symptom:** `Error: Port 5173 is already in use`
+
+**Solution:**
+Either stop the other process using that port, or specify a different port:
+
+```bash
+npm run dev -- --port 3000
+```
+
+#### Module Not Found Errors
+
+**Symptom:** Import errors or "module not found" during build.
+
+**Solution:**
+1. Delete `node_modules/` and `package-lock.json`
+2. Reinstall dependencies:
+   ```bash
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+
+### Browser Compatibility Issues
+
+#### Safari localStorage Issues
+
+**Symptom:** API key not persisting in Safari Private Mode.
+
+**Solution:**
+Safari disables localStorage in Private Browsing mode. Use a regular browser window or a different browser.
+
+#### Firefox CSP Warnings
+
+**Symptom:** Content Security Policy warnings in Firefox console.
+
+**Solution:**
+These are harmless warnings during development. They won't appear in production builds.
+
+## Getting Help
+
+If you encounter issues not covered here:
+
+<CardGroup cols={2}>
+  <Card title="GitHub Issues" icon="github" href="https://github.com/Anil-matcha/Open-Higgsfield-AI/issues">
+    Report bugs or request features on GitHub
+  </Card>
+  <Card title="Medium Article" icon="book" href="https://medium.com/@anilmatcha/building-open-higgsfield-ai-an-open-source-ai-cinema-studio-83c1e0a2a5f1">
+    Read the full technical deep dive
+  </Card>
+</CardGroup>
+
+<Tip>
+Check the browser console (F12 → Console tab) for detailed error messages. The app logs all API requests and responses with the `[Muapi]` prefix.
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Generate your first image or video
+  </Card>
+  <Card title="Image Studio" icon="image" href="/features/image-studio">
+    Master text-to-image and image-to-image generation
+  </Card>
+  <Card title="Video Studio" icon="video" href="/features/video-studio">
+    Create stunning AI-generated videos
+  </Card>
+  <Card title="Cinema Studio" icon="film" href="/features/cinema-studio">
+    Use professional camera controls
+  </Card>
+</CardGroup>

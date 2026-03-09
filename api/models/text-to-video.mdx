@@ -1,0 +1,377 @@
+---
+title: 'Text-to-Video Models'
+description: 'Generate videos from text prompts using 40+ state-of-the-art models'
+icon: 'video'
+---
+
+## Overview
+
+The Text-to-Video API provides access to 40+ cutting-edge models that generate videos from text descriptions. From cinematic sequences to animated content, these models cover a wide range of video generation use cases.
+
+<Note>
+Text-to-video models are automatically selected when no start frame image is provided in the Video Studio.
+</Note>
+
+## Model Categories
+
+<AccordionGroup>
+  <Accordion title="Seedance Models" icon="seedling">
+    ByteDance's video generation models with quality and resolution controls.
+    
+    - **Seedance Lite** — Fast generation for quick prototyping
+    - **Seedance Pro / Pro Fast** — High-quality cinematic generation
+    - **Seedance v1.5 Pro / Pro Fast** — Enhanced motion and detail
+    - **Seedance 2.0** — Latest generation with 15s duration support
+    - **Seedance 2.0 Extend** — Seamlessly continue existing videos
+  </Accordion>
+
+  <Accordion title="Kling Models" icon="sparkles">
+    Kuaishou's photorealistic video generation models.
+    
+    - **Kling v2.1 Master** — High-fidelity cinematic rendering
+    - **Kling v2.5 Turbo Pro** — Fast generation with quality
+    - **Kling v2.6 Pro** — 5s/10s duration with ultra-realism
+    - **Kling O1 Pro** — Latest generation with improved coherence
+    - **Kling v3.0 Pro / Standard** — Next-gen detail and motion
+  </Accordion>
+
+  <Accordion title="Proprietary Models" icon="crown">
+    Industry-leading commercial video generation models.
+    
+    - **Veo 3 / 3 Fast** — Google's video generation model
+    - **Veo 3.1 / 3.1 Fast** — Enhanced 8s generation at 1080p
+    - **Sora / Sora 2 / Sora 2 Pro** — OpenAI's flagship models (10–25s)
+    - **Runway Gen-3** — Slow-motion and cinematic effects
+    - **Hailuo 02 Standard / Pro** — Minimax 6s/10s generation
+    - **Hailuo 2.3 Standard / Pro** — Latest minimax models
+  </Accordion>
+
+  <Accordion title="Wan Models" icon="wand-magic-sparkles">
+    Realistic character animation and motion models.
+    
+    - **Wan 2.1 / 2.2 / 2.2 Fast** — Portrait and character animation
+    - **Wan 2.5 / 2.5 Fast** — Enhanced motion quality
+    - **Wan 2.6** — 5s/10s/15s duration support
+  </Accordion>
+
+  <Accordion title="Specialized Models" icon="film">
+    Domain-specific and open-source video models.
+    
+    - **Hunyuan / Hunyuan Fast** — Tencent's multilingual model
+    - **Pixverse v4.5 / v5 / v5.5** — Anime and illustration styles
+    - **Vidu v2.0** — 4s 9:16 mobile-optimized videos
+    - **OVI** — Creative and experimental generation
+    - **Grok Imagine** — X.AI's video model with 6s/10s options
+    - **LTX 2 Pro / Fast / 19B** — Open-source with long duration (20s)
+  </Accordion>
+</AccordionGroup>
+
+## Popular Models
+
+| Model | Duration | Resolution | Aspect Ratios | Best For |
+|-------|---------|-----------|---------------|----------|
+| **Seedance 2.0** | 5s / 10s / 15s | Basic/High | 16:9, 9:16, 4:3, 3:4 | Production-ready cinematic videos |
+| **Kling v3.0 Pro** | 5s | Variable | 16:9, 9:16, 1:1 | Photorealistic motion |
+| **Veo 3.1** | 8s | 1080p | 16:9, 9:16 | Google-grade video quality |
+| **Sora 2 Pro** | 10s / 15s / 25s | 720p/1080p | 16:9, 9:16 | Long-form storytelling |
+| **Runway Gen-3** | 5s / 8s | 720p/1080p | 5 ratios | Cinematic slow-motion |
+| **Wan 2.6** | 5s / 10s / 15s | 720p/1080p | 16:9, 9:16 | Character animation |
+| **LTX 2 Fast** | 6–20s | 720p | 16:9, 9:16 | Open-source long videos |
+
+## Newly Added Models
+
+<Tip>
+These models were recently added to the platform and offer cutting-edge video generation capabilities.
+</Tip>
+
+### Seedance 2.0
+
+**Family:** ByteDance  
+**Duration:** 5s / 10s / 15s  
+**Quality:** Basic / High  
+**Aspect Ratios:** 16:9, 9:16, 4:3, 3:4
+
+<Accordion title="Features">
+- ByteDance's latest video generation model
+- Up to 15 seconds of high-quality video
+- Quality presets for speed vs. fidelity tradeoff
+- Wide aspect ratio support
+- Natural motion and physics simulation
+</Accordion>
+
+```json Example Request
+{
+  "model": "seedance-v2.0-t2v",
+  "prompt": "A drone shot flying through a neon-lit cyberpunk city at night, with glowing signs reflecting on wet streets, moving traffic, and rain falling gently.",
+  "aspect_ratio": "16:9",
+  "duration": 10,
+  "quality": "high"
+}
+```
+
+### Seedance 2.0 Extend
+
+**Family:** ByteDance  
+**Duration:** 5s / 10s / 15s  
+**Quality:** Basic / High  
+**Requires:** `request_id` from original Seedance 2.0 generation
+
+<Accordion title="Features">
+- Seamlessly continue any Seedance 2.0 video
+- Preserves style, motion, and audio continuity
+- Optional continuation prompt for guided extension
+- Same quality and duration options as base model
+</Accordion>
+
+```json Example Request
+{
+  "model": "seedance-v2.0-extend",
+  "request_id": "abcdefg-123-456-789-a1b2c3d4e5f6",
+  "prompt": "The camera continues to pull back, revealing the full cityscape under a starry sky.",
+  "duration": 10,
+  "quality": "high"
+}
+```
+
+<Note>
+Seedance 2.0 Extend requires the `request_id` from a previously generated Seedance 2.0 video. The extension will match the style and motion of the original.
+</Note>
+
+## Common Input Parameters
+
+### Prompt
+
+**Type:** `string`  
+**Required:** Yes  
+**Max Length:** Varies by model (typically 500–3000 characters)
+
+Detailed text description of the video. Include camera movements, subject actions, lighting, atmosphere, and style.
+
+<Tip>
+For best results, structure your prompt with:
+1. **Subject/Scene:** What is in the frame
+2. **Action/Motion:** What is moving or changing
+3. **Camera:** Camera movement and angle
+4. **Lighting/Atmosphere:** Mood and visual style
+5. **Style:** Cinematic, realistic, animated, etc.
+</Tip>
+
+**Example:**
+
+```text
+A lone astronaut walks slowly across a desolate Martian landscape at sunset. 
+Red dust swirls around her boots as she approaches a distant research station. 
+The camera follows behind her with a slow dolly, golden sunlight creating long shadows. 
+Cinematic wide-angle shot, ultra-realistic, 8K quality, dramatic atmosphere.
+```
+
+### Aspect Ratio
+
+**Type:** `string`  
+**Options:** Varies by model (typically `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `21:9`)
+
+Defines the width-to-height ratio of the generated video. Most models support 16:9 (landscape) and 9:16 (vertical).
+
+### Duration
+
+**Type:** `integer`  
+**Options:** Varies by model (typically 4–25 seconds)
+
+Length of the generated video in seconds. Longer durations consume more credits and take longer to generate.
+
+<Note>
+Some models have fixed durations (e.g., Vidu v2.0 only supports 4s), while others offer flexible options (e.g., Wan 2.6 supports 5s/10s/15s).
+</Note>
+
+### Resolution
+
+**Type:** `string`  
+**Options:** `480p`, `720p`, `1080p`, `768P`, etc.
+
+Output video resolution. Higher resolutions provide better quality but consume more credits.
+
+### Quality
+
+**Type:** `string`  
+**Options:** `basic`, `medium`, `high`
+
+Some models (like Seedance and Wan) offer quality presets that affect generation time and fidelity.
+
+## Model-Specific Features
+
+<AccordionGroup>
+  <Accordion title="Sora 2 Pro — Long-Form Generation">
+    
+    **Durations:** 10s, 15s, 25s  
+    **Resolutions:** 720p, 1080p  
+    **Aspect Ratios:** 16:9, 9:16
+    
+    <Note>
+    25-second videos only support 720p resolution.
+    </Note>
+    
+    Best for narrative storytelling and complex scene transitions.
+  </Accordion>
+
+  <Accordion title="Runway Gen-3 — Cinematic Effects">
+    
+    **Durations:** 5s, 8s  
+    **Resolutions:** 720p, 1080p  
+    **Aspect Ratios:** 16:9, 9:16, 1:1, 4:3, 3:4
+    
+    <Note>
+    8-second videos cannot use 1080p resolution. 1080p videos cannot be 8 seconds.
+    </Note>
+    
+    Excels at slow-motion, cinematic camera work, and dramatic lighting.
+  </Accordion>
+
+  <Accordion title="LTX 2 Models — Long Duration Open Source">
+    
+    - **LTX 2 Fast:** 6–20 seconds (2s increments)
+    - **LTX 2 Pro:** 6, 8, 10 seconds
+    - **LTX 2 19B:** 5+ seconds with resolution control (480p/720p/1080p)
+    
+    Open-source models with extended duration support.
+  </Accordion>
+
+  <Accordion title="Seedance 2.0 Extend — Video Continuation">
+    
+    **Requires:** `request_id` from original Seedance 2.0 generation  
+    **Optional:** Continuation prompt
+    
+    ```json
+    {
+      "model": "seedance-v2.0-extend",
+      "request_id": "original-video-id",
+      "prompt": "Optional: describe what happens next",
+      "duration": 10,
+      "quality": "high"
+    }
+    ```
+    
+    The model seamlessly continues the original video, preserving style and motion. If no prompt is provided, it continues the scene naturally.
+  </Accordion>
+</AccordionGroup>
+
+## Example Prompts
+
+<AccordionGroup>
+  <Accordion title="Cinematic Drone Shot">
+    ```text
+    A sweeping drone shot starts low over a misty forest at dawn, gradually rising above 
+    the tree canopy to reveal a vast mountain range in the distance. Morning light breaks 
+    through clouds, casting golden rays across the landscape. Smooth, cinematic camera 
+    movement with gradual ascent. Ultra-realistic, 4K quality, atmospheric fog.
+    ```
+    **Recommended Models:** Kling v3.0 Pro, Veo 3.1, Seedance 2.0
+  </Accordion>
+
+  <Accordion title="Character Action">
+    ```text
+    A young woman in a red coat walks through a bustling Tokyo street at night, neon signs 
+    glowing around her. She stops to look up at the illuminated skyscrapers, her hair gently 
+    moving in the breeze. The camera follows her with a smooth tracking shot, capturing the 
+    vibrant city atmosphere. Cinematic, photorealistic, shallow depth of field.
+    ```
+    **Recommended Models:** Wan 2.6, Kling v2.6 Pro, Sora 2 Pro
+  </Accordion>
+
+  <Accordion title="Product Demo">
+    ```text
+    A sleek smartphone rotates slowly on a reflective surface, studio lighting highlighting 
+    its metallic edges. The screen lights up to show a colorful app interface. Camera orbits 
+    around the product with smooth 360-degree rotation. Clean, professional, high-end product 
+    commercial style, 4K quality.
+    ```
+    **Recommended Models:** Runway Gen-3, Veo 3.1, Kling v2.6 Pro
+  </Accordion>
+
+  <Accordion title="Fantasy Scene">
+    ```text
+    A massive dragon perches on a cliff overlooking a medieval castle at sunset. Its scales 
+    shimmer in the golden light as it spreads its wings and roars, creating a gust of wind 
+    that ripples through the grass below. The camera slowly zooms in from a wide establishing 
+    shot. Epic fantasy, cinematic lighting, ultra-detailed, dramatic atmosphere.
+    ```
+    **Recommended Models:** Pixverse v5.5, Seedance 2.0, Kling v3.0 Pro
+  </Accordion>
+</AccordionGroup>
+
+## Duration & Resolution Guide
+
+| Use Case | Recommended Duration | Resolution | Models |
+|----------|---------------------|-----------|--------|
+| Social media clips | 5–8s | 720p–1080p | Seedance 2.0, Wan 2.6, Kling v2.6 Pro |
+| YouTube shorts | 10–15s | 1080p | Sora 2 Pro, Veo 3.1, Seedance 2.0 |
+| Product demos | 5–8s | 1080p | Runway Gen-3, Veo 3.1, Kling v2.6 Pro |
+| Cinematic sequences | 10–25s | 720p–1080p | Sora 2 Pro, Seedance 2.0 |
+| Quick prototypes | 4–6s | 480p–720p | Hailuo 2.3, Wan 2.2 Fast |
+
+## API Endpoints
+
+All text-to-video models use the unified endpoint pattern:
+
+```bash
+POST /api/v1/{model-endpoint}
+```
+
+Refer to the [Generate Video](/api/generate/video) guide for integration details.
+
+## Model Selection Tips
+
+<Tip>
+**For production work:** Use Seedance 2.0, Kling v2.6 Pro, or Veo 3.1 for reliable quality.
+
+**For long videos:** Use Sora 2 Pro (25s), LTX 2 Fast (20s), or Seedance 2.0 (15s).
+
+**For character animation:** Use Wan 2.6 or Kling v2.6 Pro.
+
+**For fast iteration:** Use Seedance Lite, Wan 2.2 Fast, or Hailuo 2.3 Standard.
+
+**For cinematic effects:** Use Runway Gen-3 or Kling v3.0 Pro.
+
+**For vertical content:** Use models supporting 9:16 (most models support this).
+</Tip>
+
+## Camera Movement Vocabulary
+
+<Note>
+Include these terms in your prompt to guide camera motion:
+</Note>
+
+**Basic Movements:**
+- **Dolly In/Out** — Move camera toward/away from subject
+- **Pan Left/Right** — Horizontal rotation
+- **Tilt Up/Down** — Vertical rotation
+- **Zoom In/Out** — Lens zoom (not camera movement)
+
+**Advanced Movements:**
+- **Crane Shot** — Vertical movement (up/down)
+- **Tracking Shot** — Follow subject's movement
+- **Orbit/Arc** — Circular movement around subject
+- **Dutch Angle** — Tilted camera for dramatic effect
+
+**Speeds:**
+- **Slow dolly** — Smooth, cinematic
+- **Crash zoom** — Fast, dramatic zoom
+- **Smooth tracking** — Steadicam-like follow
+
+## Rate Limits
+
+Video generation consumes significantly more credits than image generation through the Muapi.ai API. Cost factors include:
+
+- **Duration:** Longer videos cost more
+- **Resolution:** Higher resolutions cost more
+- **Quality:** High-quality modes cost more
+- **Model:** Premium models (Sora, Runway) cost more than open-source options
+
+Refer to the [Muapi.ai documentation](https://muapi.ai) for detailed pricing information.
+
+## Best Practices
+
+1. **Start Short:** Test with 5s generations before committing to longer durations.
+2. **Be Specific:** Describe camera movement, subject actions, and lighting in detail.
+3. **Avoid Complex Edits:** Text-to-video models work best with single continuous shots.
+4. **Use Extend:** For longer sequences, use Seedance 2.0 Extend to chain multiple clips.
+5. **Resolution Trade-offs:** Use 720p for iteration, 1080p for final output.

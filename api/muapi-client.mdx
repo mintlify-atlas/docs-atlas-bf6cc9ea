@@ -1,0 +1,456 @@
+---
+title: "MuapiClient"
+description: "JavaScript client for interacting with the Muapi AI generation API"
+---
+
+## Overview
+
+The `MuapiClient` class provides a JavaScript interface for generating images and videos through the Muapi API. It handles authentication, request submission, and result polling automatically.
+
+## Installation
+
+```javascript
+import { MuapiClient } from './lib/muapi.js';
+```
+
+## Constructor
+
+```javascript
+const client = new MuapiClient();
+```
+
+The constructor automatically sets the base URL based on the environment:
+- **Development**: Uses empty string (proxied requests)
+- **Production**: Uses `https://api.muapi.ai`
+
+## Authentication
+
+The client retrieves the API key from localStorage:
+
+```javascript
+getKey()
+```
+
+<Note>
+The API key must be stored in localStorage under the key `muapi_key`. If missing, an error is thrown.
+</Note>
+
+### Setting the API Key
+
+```javascript
+localStorage.setItem('muapi_key', 'your-api-key-here');
+```
+
+## Submit and Poll Pattern
+
+All generation methods follow a two-step pattern:
+
+1. **Submit**: POST request to the model endpoint
+2. **Poll**: Retrieve results from `/api/v1/predictions/{request_id}/result`
+
+### Polling Configuration
+
+```javascript
+pollForResult(requestId, key, maxAttempts = 60, interval = 2000)
+```
+
+<ParamField path="requestId" type="string" required>
+  The request ID returned from the submit response
+</ParamField>
+
+<ParamField path="key" type="string" required>
+  The API key for authentication
+</ParamField>
+
+<ParamField path="maxAttempts" type="number" default="60">
+  Maximum polling attempts (default ~2 minutes)
+</ParamField>
+
+<ParamField path="interval" type="number" default="2000">
+  Polling interval in milliseconds
+</ParamField>
+
+## Image Generation
+
+### generateImage()
+
+Generate images using Text-to-Image or Image-to-Image models.
+
+```javascript
+const result = await client.generateImage({
+  model: 'flux-dev',
+  prompt: 'A serene mountain landscape at sunset',
+  aspect_ratio: '16:9',
+  seed: 42,
+  image_url: null // Optional: for Image-to-Image
+});
+```
+
+<ParamField path="model" type="string" required>
+  Model ID from the model catalog (e.g., `flux-dev`, `midjourney-v7-text-to-image`)
+</ParamField>
+
+<ParamField path="prompt" type="string" required>
+  Text description of the desired image
+</ParamField>
+
+<ParamField path="aspect_ratio" type="string">
+  Aspect ratio (e.g., `1:1`, `16:9`, `9:16`)
+</ParamField>
+
+<ParamField path="resolution" type="string">
+  Resolution option (e.g., `1k`, `2k`, `4k`) - varies by model
+</ParamField>
+
+<ParamField path="quality" type="string">
+  Quality setting (e.g., `basic`, `high`) - varies by model
+</ParamField>
+
+<ParamField path="seed" type="number">
+  Random seed for reproducible results (-1 for random)
+</ParamField>
+
+<ParamField path="image_url" type="string">
+  For Image-to-Image: URL of the reference image
+</ParamField>
+
+<ParamField path="strength" type="number" default="0.6">
+  For Image-to-Image: Transformation strength (0-1)
+</ParamField>
+
+<ResponseField name="url" type="string">
+  The generated image URL
+</ResponseField>
+
+<ResponseField name="outputs" type="array">
+  Array of output URLs (first item is the primary result)
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Generation status (`completed`, `succeeded`, `success`)
+</ResponseField>
+
+### Example: Text-to-Image
+
+```javascript
+const result = await client.generateImage({
+  model: 'flux-dev',
+  prompt: 'Extreme close-up of a tiger eye with FLUX painted over it',
+  aspect_ratio: '1:1'
+});
+
+console.log(result.url); // https://...
+```
+
+### Example: Image-to-Image
+
+```javascript
+const result = await client.generateImage({
+  model: 'flux-dev',
+  prompt: 'Transform into a watercolor painting',
+  image_url: 'https://example.com/uploaded-image.jpg',
+  strength: 0.7,
+  aspect_ratio: '16:9'
+});
+```
+
+## Video Generation
+
+### generateVideo()
+
+Generate videos using Text-to-Video models.
+
+```javascript
+const result = await client.generateVideo({
+  model: 'kling-v2.6-pro-t2v',
+  prompt: 'A cat playing with a ball of yarn',
+  aspect_ratio: '16:9',
+  duration: 5,
+  resolution: '720p'
+});
+```
+
+<ParamField path="model" type="string" required>
+  Video model ID (e.g., `kling-v2.6-pro-t2v`, `runway-text-to-video`)
+</ParamField>
+
+<ParamField path="prompt" type="string" required>
+  Text description of the desired video
+</ParamField>
+
+<ParamField path="aspect_ratio" type="string">
+  Video aspect ratio (e.g., `16:9`, `9:16`, `1:1`)
+</ParamField>
+
+<ParamField path="duration" type="number">
+  Video duration in seconds (varies by model)
+</ParamField>
+
+<ParamField path="resolution" type="string">
+  Video resolution (e.g., `480p`, `720p`, `1080p`)
+</ParamField>
+
+<ParamField path="quality" type="string">
+  Quality setting (e.g., `basic`, `high`, `medium`)
+</ParamField>
+
+<Note>
+Video generation uses longer polling: 120 attempts at 2-second intervals (~4 minutes)
+</Note>
+
+## Image-to-Image Generation
+
+### generateI2I()
+
+Generate images using dedicated Image-to-Image models with custom image field handling.
+
+```javascript
+const result = await client.generateI2I({
+  model: 'flux-kontext-dev-i2i',
+  image_url: 'https://example.com/reference.jpg',
+  prompt: 'Add magical glowing effects',
+  aspect_ratio: '1:1'
+});
+```
+
+<ParamField path="model" type="string" required>
+  I2I model ID from the catalog
+</ParamField>
+
+<ParamField path="image_url" type="string" required>
+  URL of the uploaded reference image
+</ParamField>
+
+<ParamField path="images_list" type="array">
+  Array of image URLs for models that support multiple images
+</ParamField>
+
+<ParamField path="prompt" type="string">
+  Optional text prompt (depends on model support)
+</ParamField>
+
+<ParamField path="aspect_ratio" type="string">
+  Output aspect ratio
+</ParamField>
+
+<ParamField path="resolution" type="string">
+  Output resolution
+</ParamField>
+
+<ParamField path="quality" type="string">
+  Output quality
+</ParamField>
+
+<Note>
+The `imageField` property from the model definition determines which payload key receives the image URL(s).
+Common fields: `image_url`, `images_list`, `model_image_url`
+</Note>
+
+### Multi-Image Support
+
+```javascript
+const result = await client.generateI2I({
+  model: 'flux-kontext-dev-i2i',
+  images_list: [
+    'https://example.com/ref1.jpg',
+    'https://example.com/ref2.jpg'
+  ],
+  prompt: 'Combine these styles'
+});
+```
+
+## Image-to-Video Generation
+
+### generateI2V()
+
+Generate videos from a starting frame image.
+
+```javascript
+const result = await client.generateI2V({
+  model: 'runway-image-to-video',
+  image_url: 'https://example.com/start-frame.jpg',
+  prompt: 'Camera slowly zooms in',
+  duration: 5,
+  aspect_ratio: '16:9'
+});
+```
+
+<ParamField path="model" type="string" required>
+  I2V model ID from the catalog
+</ParamField>
+
+<ParamField path="image_url" type="string" required>
+  URL of the starting frame image
+</ParamField>
+
+<ParamField path="prompt" type="string">
+  Optional motion description
+</ParamField>
+
+<ParamField path="aspect_ratio" type="string">
+  Video aspect ratio
+</ParamField>
+
+<ParamField path="duration" type="number">
+  Video duration in seconds
+</ParamField>
+
+<ParamField path="resolution" type="string">
+  Video resolution
+</ParamField>
+
+<ParamField path="quality" type="string">
+  Video quality
+</ParamField>
+
+## File Upload
+
+### uploadFile()
+
+Upload an image file to Muapi's hosting service.
+
+```javascript
+const fileUrl = await client.uploadFile(file);
+```
+
+<ParamField path="file" type="File" required>
+  The image file to upload (browser File object)
+</ParamField>
+
+<ResponseField name="fileUrl" type="string">
+  The hosted URL of the uploaded file
+</ResponseField>
+
+### Upload Workflow
+
+1. User selects file from input
+2. Upload file to get hosted URL
+3. Use URL in generation requests
+
+```javascript
+// Example: Complete I2I workflow
+const fileInput = document.querySelector('input[type="file"]');
+const file = fileInput.files[0];
+
+// Upload the file
+const fileUrl = await client.uploadFile(file);
+
+// Use in generation
+const result = await client.generateI2I({
+  model: 'flux-kontext-dev-i2i',
+  image_url: fileUrl,
+  prompt: 'Transform into a painting'
+});
+```
+
+<Note>
+The upload endpoint returns JSON with a `url`, `file_url`, or `data.url` field containing the hosted URL.
+</Note>
+
+## Error Handling
+
+### Common Errors
+
+```javascript
+try {
+  const result = await client.generateImage(params);
+} catch (error) {
+  if (error.message.includes('API Key missing')) {
+    // No API key in localStorage
+  } else if (error.message.includes('API Request Failed')) {
+    // HTTP error from API
+  } else if (error.message.includes('Generation failed')) {
+    // Model generation failed
+  } else if (error.message.includes('timed out')) {
+    // Polling timeout exceeded
+  }
+}
+```
+
+<Warning>
+API errors include the status code and response text (truncated to 100 characters).
+</Warning>
+
+## Request Headers
+
+All requests include:
+
+```javascript
+headers: {
+  'Content-Type': 'application/json',
+  'x-api-key': key
+}
+```
+
+File uploads use:
+
+```javascript
+headers: {
+  'x-api-key': key
+}
+// Content-Type is automatically set by FormData
+```
+
+## Utility Methods
+
+### getDimensionsFromAR()
+
+Convert aspect ratio string to width/height dimensions (1024px base).
+
+```javascript
+const [width, height] = client.getDimensionsFromAR('16:9');
+// Returns: [1280, 720]
+```
+
+<ResponseField name="dimensions" type="array">
+  `[width, height]` in pixels
+</ResponseField>
+
+**Supported Ratios:**
+- `1:1` → `[1024, 1024]`
+- `16:9` → `[1280, 720]`
+- `9:16` → `[720, 1280]`
+- `4:3` → `[1152, 864]`
+- `3:2` → `[1216, 832]`
+- `21:9` → `[1536, 640]`
+
+## Complete Example
+
+```javascript
+import { muapi } from './lib/muapi.js';
+
+// Set API key
+localStorage.setItem('muapi_key', 'your-key');
+
+// Upload reference image
+const file = document.querySelector('input').files[0];
+const imageUrl = await muapi.uploadFile(file);
+
+// Generate image-to-image
+const i2iResult = await muapi.generateI2I({
+  model: 'flux-kontext-dev-i2i',
+  image_url: imageUrl,
+  prompt: 'Transform into cyberpunk style',
+  aspect_ratio: '16:9'
+});
+
+// Generate video from result
+const videoResult = await muapi.generateI2V({
+  model: 'runway-image-to-video',
+  image_url: i2iResult.url,
+  prompt: 'Camera pans slowly to the right',
+  duration: 5
+});
+
+console.log('Video URL:', videoResult.url);
+```
+
+## Singleton Instance
+
+A pre-configured client instance is exported:
+
+```javascript
+import { muapi } from './lib/muapi.js';
+
+await muapi.generateImage({ /* ... */ });
+```

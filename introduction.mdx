@@ -1,0 +1,162 @@
+---
+title: Introduction
+description: Open-source alternative to Higgsfield AI for generating images and videos with 200+ state-of-the-art models
+---
+
+# Welcome to Open Higgsfield AI
+
+Open Higgsfield AI is an ambitious open-source project dedicated to replicating the full functionality of the Higgsfield platform. It's a free, self-hosted AI image, video, and cinema studio that brings Higgsfield-style creative workflows to everyone.
+
+<img src="/images/studio-demo.png" alt="Open Higgsfield Studio Interface" />
+
+## What is Open Higgsfield AI?
+
+Open Higgsfield AI is a comprehensive creative toolkit powered by [Muapi.ai](https://muapi.ai) that provides access to over 200 state-of-the-art AI models for:
+
+- **Text-to-Image Generation** — 50+ models including Flux Dev, Nano Banana 2, Seedream 5.0, Ideogram v3, Midjourney v7
+- **Image-to-Image Transformation** — 55+ models with support for up to 14 reference images
+- **Text-to-Video Generation** — 40+ models including Kling v3, Sora 2, Veo 3, Wan 2.6, Seedance 2.0
+- **Image-to-Video Animation** — 60+ models for animating still images into video
+- **Cinema Studio** — Professional camera controls with lens, focal length, and aperture settings
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="Multi-Studio Interface" icon="grid-2">
+    Separate studios for images, videos, and cinematic generation with intelligent mode switching
+  </Card>
+  <Card title="Multi-Image Input" icon="images">
+    Upload up to 14 reference images for compatible models with batch upload support
+  </Card>
+  <Card title="Smart Controls" icon="sliders">
+    Dynamic aspect ratio, resolution, quality, and duration pickers that adapt to each model
+  </Card>
+  <Card title="Generation History" icon="clock-rotate-left">
+    Browse, revisit, and download all past generations persisted in browser storage
+  </Card>
+  <Card title="Upload History" icon="folder-open">
+    Reuse previously uploaded reference images across sessions without re-uploading
+  </Card>
+  <Card title="Responsive Design" icon="mobile">
+    Dark glassmorphism UI that works seamlessly on desktop and mobile devices
+  </Card>
+</CardGroup>
+
+## Why Open Higgsfield AI?
+
+Choosing Open Higgsfield AI over proprietary alternatives gives you:
+
+<Info>
+**Free & Open Source** — No subscription fees, no vendor lock-in. MIT licensed code you can modify and extend.
+</Info>
+
+<Info>
+**Self-Hosted** — Your data stays on your machine. API keys stored locally in browser localStorage.
+</Info>
+
+<Info>
+**200+ Models** — Access to the latest text-to-image, image-to-image, text-to-video, and image-to-video models.
+</Info>
+
+<Info>
+**Extensible Architecture** — Built with vanilla JavaScript and Vite. Easy to add your own models and customize the UI.
+</Info>
+
+### Comparison with Higgsfield AI
+
+| Feature | Higgsfield AI | Open Higgsfield AI |
+| :--- | :--- | :--- |
+| **Cost** | Subscription-based | Free (open-source) |
+| **Models** | Proprietary | 200+ open & commercial |
+| **Multi-image input** | Limited | Up to 14 images per request |
+| **Self-hosting** | No | Yes |
+| **Customizable** | No | Fully hackable |
+| **Data privacy** | Cloud-based | Your data stays local |
+| **Source code** | Closed | MIT licensed |
+
+## Architecture Overview
+
+Open Higgsfield AI follows a component-based architecture using vanilla JavaScript, where each component is a function that returns a DOM element.
+
+```
+src/
+├── components/
+│   ├── ImageStudio.js     # Dual-mode t2i/i2i studio
+│   ├── VideoStudio.js     # Dual-mode t2v/i2v studio
+│   ├── CinemaStudio.js    # Pro cinema controls
+│   ├── UploadPicker.js    # Multi-image upload
+│   ├── CameraControls.js  # Camera settings picker
+│   ├── Header.js          # Navigation & settings
+│   ├── AuthModal.js       # API key input
+│   └── SettingsModal.js   # Settings management
+├── lib/
+│   ├── muapi.js          # API client for Muapi.ai
+│   ├── models.js         # 200+ model definitions
+│   └── uploadHistory.js  # Upload history storage
+└── styles/
+    ├── global.css        # Global styles & animations
+    ├── studio.css        # Studio-specific styles
+    └── variables.css     # CSS custom properties
+```
+
+<Note>
+The project uses **Vite** for the build system, **Tailwind CSS v4** for styling, and communicates with the Muapi.ai API for model inference.
+</Note>
+
+## Tech Stack
+
+- **Vite** — Lightning-fast build tool and development server
+- **Vanilla JavaScript** — No framework overhead, pure DOM manipulation
+- **Tailwind CSS v4** — Utility-first CSS with custom design tokens
+- **Muapi.ai** — Unified API gateway for 200+ AI models
+
+## How It Works
+
+Open Higgsfield AI uses a simple but powerful architecture:
+
+1. **Component-Based UI** — Each studio (Image, Video, Cinema) is a standalone component that manages its own state
+2. **API Client Layer** — The `muapi.js` client handles authentication, request submission, and polling for results
+3. **Model Definitions** — The `models.js` file contains metadata for all 200+ models, including endpoints, supported parameters, and input schemas
+4. **Local Storage** — API keys, generation history, and upload history are stored locally in the browser
+
+### API Integration Pattern
+
+The app communicates with Muapi.ai using a two-step pattern:
+
+<Steps>
+  <Step title="Submit">
+    Send a `POST` request to `/api/v1/{model-endpoint}` with prompt and parameters. Receive a `request_id` in response.
+  </Step>
+  <Step title="Poll">
+    Make repeated `GET` requests to `/api/v1/predictions/{request_id}/result` until status is `completed`, `succeeded`, or `failed`.
+  </Step>
+  <Step title="Display">
+    Extract the image or video URL from the response and display it in the studio interface.
+  </Step>
+</Steps>
+
+<Tip>
+During development, Vite proxies `/api` requests to `https://api.muapi.ai` to avoid CORS issues. In production, requests go directly to the Muapi API.
+</Tip>
+
+## Current State & Future Direction
+
+The Image Studio and Video Studio are fully operational, featuring:
+
+- Premium dark-mode glassmorphism UI
+- Generation and upload history management
+- Multi-model support with dynamic control adaptation
+- Multi-image input for compatible models
+
+The architecture is designed to scale for:
+
+- Model training interfaces
+- Advanced editing tools (in-painting, out-painting)
+- User accounts and cloud sync
+- Custom model integration
+
+## Next Steps
+
+Ready to get started? Follow our [Quickstart](/quickstart) guide to clone the repository, install dependencies, and generate your first AI image or video.
+
+For detailed installation instructions and troubleshooting, see the [Installation](/installation) guide.

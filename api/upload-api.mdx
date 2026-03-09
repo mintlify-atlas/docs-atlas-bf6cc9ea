@@ -1,0 +1,461 @@
+---
+title: "Upload API"
+description: "Upload and host images for use with AI generation models"
+---
+
+## Overview
+
+The Upload API allows you to upload image files to Muapi's hosting service and receive a publicly accessible URL. These URLs can then be used as inputs for Image-to-Image and Image-to-Video models.
+
+## Endpoint
+
+```
+POST /api/v1/upload_file
+```
+
+## Authentication
+
+Requires API key in the `x-api-key` header:
+
+```javascript
+headers: {
+  'x-api-key': 'your-api-key'
+}
+```
+
+## Request Format
+
+The request must use `multipart/form-data` encoding with a single file field:
+
+```javascript
+const formData = new FormData();
+formData.append('file', file);
+
+const response = await fetch('https://api.muapi.ai/api/v1/upload_file', {
+  method: 'POST',
+  headers: {
+    'x-api-key': 'your-api-key'
+  },
+  body: formData
+});
+```
+
+<ParamField body="file" type="File" required>
+  The image file to upload (browser File object or blob)
+</ParamField>
+
+## Response Format
+
+The API returns a JSON object containing the hosted file URL:
+
+```json
+{
+  "url": "https://cdn.muapi.ai/uploads/abc123/image.jpg"
+}
+```
+
+**Alternative response formats:**
+
+```json
+{
+  "file_url": "https://cdn.muapi.ai/uploads/abc123/image.jpg"
+}
+```
+
+```json
+{
+  "data": {
+    "url": "https://cdn.muapi.ai/uploads/abc123/image.jpg"
+  }
+}
+```
+
+<ResponseField name="url" type="string">
+  The publicly accessible URL of the uploaded file
+</ResponseField>
+
+<ResponseField name="file_url" type="string">
+  Alternative field name for the uploaded file URL
+</ResponseField>
+
+<ResponseField name="data.url" type="string">
+  Nested URL in data object
+</ResponseField>
+
+## Using the Client
+
+### Basic Upload
+
+```javascript
+import { muapi } from './lib/muapi.js';
+
+const fileInput = document.querySelector('input[type="file"]');
+const file = fileInput.files[0];
+
+const fileUrl = await muapi.uploadFile(file);
+console.log('Uploaded:', fileUrl);
+// Output: https://cdn.muapi.ai/uploads/abc123/image.jpg
+```
+
+### Implementation Details
+
+The `uploadFile()` method in `MuapiClient`:
+
+```javascript
+async uploadFile(file) {
+  const key = this.getKey();
+  const url = `${this.baseUrl}/api/v1/upload_file`;
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  console.log('[Muapi] Uploading file:', file.name);
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'x-api-key': key },
+    body: formData
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`File upload failed: ${response.status} - ${errText.slice(0, 100)}`);
+  }
+
+  const data = await response.json();
+  console.log('[Muapi] Upload response:', data);
+
+  const fileUrl = data.url || data.file_url || data.data?.url;
+  if (!fileUrl) throw new Error('No URL returned from file upload');
+  return fileUrl;
+}
+```
+
+## Complete Workflow
+
+### Image-to-Image with Upload
+
+```javascript
+import { muapi } from './lib/muapi.js';
+
+// 1. Get file from input
+const file = document.querySelector('input[type="file"]').files[0];
+
+// 2. Upload to get URL
+const uploadedUrl = await muapi.uploadFile(file);
+
+// 3. Use in I2I generation
+const result = await muapi.generateI2I({
+  model: 'flux-kontext-dev-i2i',
+  image_url: uploadedUrl,
+  prompt: 'Transform into watercolor painting',
+  aspect_ratio: '1:1'
+});
+
+console.log('Result:', result.url);
+```
+
+### Image-to-Video with Upload
+
+```javascript
+// 1. Upload starting frame
+const file = document.querySelector('input').files[0];
+const frameUrl = await muapi.uploadFile(file);
+
+// 2. Generate video
+const video = await muapi.generateI2V({
+  model: 'runway-image-to-video',
+  image_url: frameUrl,
+  prompt: 'Camera slowly zooms in',
+  duration: 5,
+  aspect_ratio: '16:9'
+});
+
+console.log('Video:', video.url);
+```
+
+### Multi-Image Upload
+
+Some models support multiple reference images:
+
+```javascript
+const fileInput = document.querySelector('input[type="file"][multiple]');
+const files = Array.from(fileInput.files);
+
+// Upload all files
+const uploadPromises = files.map(file => muapi.uploadFile(file));
+const imageUrls = await Promise.all(uploadPromises);
+
+// Use in I2I with multiple images
+const result = await muapi.generateI2I({
+  model: 'flux-kontext-dev-i2i',
+  images_list: imageUrls,
+  prompt: 'Combine these styles',
+  aspect_ratio: '1:1'
+});
+```
+
+<Note>
+Check the model's `maxImages` property to see how many images it supports. Use `getMaxImagesForI2IModel()` from the model catalog.
+</Note>
+
+## Supported File Types
+
+The API accepts standard image formats:
+
+- **JPEG/JPG** - `.jpg`, `.jpeg`
+- **PNG** - `.png`
+- **WebP** - `.webp`
+- **GIF** - `.gif` (static)
+
+<Warning>
+File size limits apply. Large files may take longer to upload and process.
+</Warning>
+
+## Error Handling
+
+```javascript
+try {
+  const fileUrl = await muapi.uploadFile(file);
+} catch (error) {
+  if (error.message.includes('File upload failed: 401')) {
+    console.error('Invalid API key');
+  } else if (error.message.includes('File upload failed: 413')) {
+    console.error('File too large');
+  } else if (error.message.includes('File upload failed: 415')) {
+    console.error('Unsupported file type');
+  } else if (error.message.includes('No URL returned')) {
+    console.error('Unexpected response format');
+  } else {
+    console.error('Upload error:', error.message);
+  }
+}
+```
+
+### Common Error Codes
+
+<ResponseField name="400" type="Bad Request">
+  Missing or invalid file in request
+</ResponseField>
+
+<ResponseField name="401" type="Unauthorized">
+  Invalid or missing API key
+</ResponseField>
+
+<ResponseField name="413" type="Payload Too Large">
+  File size exceeds limit
+</ResponseField>
+
+<ResponseField name="415" type="Unsupported Media Type">
+  Invalid file format
+</ResponseField>
+
+## Upload Progress
+
+For large files, you can track upload progress using XMLHttpRequest:
+
+```javascript
+function uploadWithProgress(file, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable) {
+        const percentComplete = (e.loaded / e.total) * 100;
+        onProgress(percentComplete);
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        const data = JSON.parse(xhr.responseText);
+        const fileUrl = data.url || data.file_url || data.data?.url;
+        resolve(fileUrl);
+      } else {
+        reject(new Error(`Upload failed: ${xhr.status}`));
+      }
+    });
+
+    xhr.addEventListener('error', () => reject(new Error('Network error')));
+
+    xhr.open('POST', 'https://api.muapi.ai/api/v1/upload_file');
+    xhr.setRequestHeader('x-api-key', muapi.getKey());
+    xhr.send(formData);
+  });
+}
+
+// Usage
+const file = document.querySelector('input').files[0];
+const fileUrl = await uploadWithProgress(file, (percent) => {
+  console.log(`Upload progress: ${percent.toFixed(1)}%`);
+});
+```
+
+## Client-Side Image Validation
+
+Validate files before uploading:
+
+```javascript
+function validateImageFile(file) {
+  const errors = [];
+  
+  // Check file type
+  const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  if (!validTypes.includes(file.type)) {
+    errors.push('Invalid file type. Must be JPEG, PNG, WebP, or GIF.');
+  }
+  
+  // Check file size (e.g., 10MB limit)
+  const maxSize = 10 * 1024 * 1024;
+  if (file.size > maxSize) {
+    errors.push('File too large. Maximum size: 10MB.');
+  }
+  
+  return errors;
+}
+
+// Usage
+const file = input.files[0];
+const errors = validateImageFile(file);
+if (errors.length > 0) {
+  console.error(errors.join(' '));
+} else {
+  const fileUrl = await muapi.uploadFile(file);
+}
+```
+
+## Image Preview Before Upload
+
+```javascript
+function previewImage(file, imgElement) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imgElement.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Usage
+const input = document.querySelector('input[type="file"]');
+const preview = document.querySelector('img#preview');
+
+input.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    previewImage(file, preview);
+  }
+});
+```
+
+## Complete UI Example
+
+```html
+<input type="file" id="imageInput" accept="image/*" />
+<img id="preview" style="max-width: 300px;" />
+<button id="uploadBtn">Upload & Generate</button>
+<div id="result"></div>
+
+<script type="module">
+import { muapi } from './lib/muapi.js';
+
+const input = document.getElementById('imageInput');
+const preview = document.getElementById('preview');
+const uploadBtn = document.getElementById('uploadBtn');
+const result = document.getElementById('result');
+
+input.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => preview.src = e.target.result;
+    reader.readAsDataURL(file);
+  }
+});
+
+uploadBtn.addEventListener('click', async () => {
+  const file = input.files[0];
+  if (!file) {
+    alert('Please select a file');
+    return;
+  }
+
+  try {
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = 'Uploading...';
+
+    // Upload file
+    const fileUrl = await muapi.uploadFile(file);
+    console.log('Uploaded:', fileUrl);
+
+    uploadBtn.textContent = 'Generating...';
+
+    // Generate I2I
+    const generation = await muapi.generateI2I({
+      model: 'flux-kontext-dev-i2i',
+      image_url: fileUrl,
+      prompt: 'Transform into anime style',
+      aspect_ratio: '1:1'
+    });
+
+    // Display result
+    result.innerHTML = `<img src="${generation.url}" style="max-width: 500px;" />`;
+    uploadBtn.textContent = 'Upload & Generate';
+    uploadBtn.disabled = false;
+  } catch (error) {
+    alert('Error: ' + error.message);
+    uploadBtn.textContent = 'Upload & Generate';
+    uploadBtn.disabled = false;
+  }
+});
+</script>
+```
+
+## Best Practices
+
+1. **Validate files client-side** before uploading to reduce errors
+2. **Show upload progress** for large files to improve UX
+3. **Cache uploaded URLs** to avoid re-uploading the same file
+4. **Handle errors gracefully** with user-friendly messages
+5. **Optimize images** before upload when possible (resize, compress)
+6. **Use appropriate file formats**:
+   - JPEG for photos
+   - PNG for graphics with transparency
+   - WebP for best compression
+
+## Security Notes
+
+<Warning>
+- Uploaded files are publicly accessible via the returned URL
+- Do not upload sensitive or private images
+- URLs are permanent and cannot be deleted after upload
+- Always validate file types and sizes on the client side
+</Warning>
+
+## URL Persistence
+
+Uploaded file URLs are permanent and can be:
+
+- **Reused** across multiple generation requests
+- **Shared** with other users
+- **Embedded** in applications
+- **Stored** for future use
+
+```javascript
+// Upload once
+const fileUrl = await muapi.uploadFile(file);
+
+// Use multiple times
+const result1 = await muapi.generateI2I({
+  model: 'flux-kontext-dev-i2i',
+  image_url: fileUrl,
+  prompt: 'Style 1'
+});
+
+const result2 = await muapi.generateI2I({
+  model: 'midjourney-v7-image-to-image',
+  image_url: fileUrl,
+  prompt: 'Style 2'
+});
+```

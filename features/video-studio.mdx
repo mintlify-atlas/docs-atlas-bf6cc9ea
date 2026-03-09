@@ -1,0 +1,406 @@
+---
+title: 'Video Studio'
+description: 'Create stunning AI videos from text prompts or animate images with 100+ video generation models'
+icon: 'video'
+---
+
+The **Video Studio** is a dual-mode AI video generation workspace that intelligently switches between text-to-video (T2V) and image-to-video (I2V) workflows based on whether you've uploaded a start frame.
+
+## Dual Mode Intelligence
+
+Video Studio features the same smart mode switching as Image Studio, adapting the entire interface to your workflow:
+
+<CardGroup cols={2}>
+  <Card title="Text-to-Video Mode" icon="clapperboard">
+    Generate videos from text descriptions. Access 40+ models including Kling, Sora, Veo, Wan, Seedance 2.0, and Runway.
+  </Card>
+  <Card title="Image-to-Video Mode" icon="film">
+    Animate images into videos. Upload a start frame to switch to 60+ I2V models that bring still images to life.
+  </Card>
+</CardGroup>
+
+### How Mode Switching Works
+
+1. **Start in T2V Mode** — Default to text-to-video with 40+ creative models
+2. **Upload triggers I2V Mode** — Upload an image to automatically switch to 60+ image-to-video models
+3. **Clear returns to T2V** — Remove the start frame to return to text-to-video mode
+
+The model selector, aspect ratio, duration, and quality controls all update automatically when you switch modes.
+
+## Generating Videos from Text
+
+<Steps>
+  <Step title="Enter Your Prompt">
+    Describe the video scene you want to create. The prompt is **required** for text-to-video generation.
+    
+    ```
+    Example: "A time-lapse of a city skyline transitioning from day to night, with lights turning on in buildings"
+    ```
+  </Step>
+  
+  <Step title="Select Your Model">
+    Click the model button to browse 40+ text-to-video models:
+    
+    **Flagship Models:**
+    - **Seedance 2.0** — ByteDance · 16:9/9:16/4:3/3:4 · 5/10/15s · Quality basic/high
+    - **Kling v3** — Kuaishou's latest · High motion quality
+    - **Sora 2** — OpenAI's video generation · Natural motion
+    - **Veo 3** — Google's video model · Smooth dynamics
+    - **Wan 2.6** — Chinese model · Quality presets
+    - **Runway Gen-3** — Professional video synthesis
+    - **Hailuo 2.3** — Fast generation · Good quality
+    
+    Use the search bar to quickly find models by name.
+  </Step>
+  
+  <Step title="Configure Video Settings">
+    Adjust the video parameters (available controls vary by model):
+    
+    **Aspect Ratio:**
+    - `16:9` — Landscape (YouTube, desktop)
+    - `9:16` — Portrait (TikTok, Instagram Reels)
+    - `4:3`, `3:4` — Traditional and portrait formats
+    - `1:1` — Square (Instagram feed)
+    
+    **Duration:**
+    - `5s` — Quick clips
+    - `10s` — Standard length
+    - `15s` — Extended scenes (if supported)
+    
+    **Quality/Resolution** (if available):
+    - **basic** / **high** quality for Seedance 2.0
+    - Resolution presets for other models
+  </Step>
+  
+  <Step title="Generate Video">
+    Click **Generate ✨** to start. Video generation typically takes:
+    
+    - **5-10 seconds**: Fast models (Hailuo, basic quality)
+    - **30-60 seconds**: Standard models (Kling, Wan)
+    - **1-3 minutes**: Premium models (Sora, Veo)
+    
+    The interface shows a loading spinner and polls the API until completion.
+  </Step>
+</Steps>
+
+## Animating Images to Video
+
+<Steps>
+  <Step title="Upload a Start Frame">
+    Click the **upload button** (📤 icon) to open the reference image picker:
+    
+    - **Select from upload history** — Reuse previously uploaded images
+    - **Upload a new image** — Choose a file from your device
+    
+    The studio automatically switches to I2V mode when you select an image.
+  </Step>
+  
+  <Step title="Studio Switches to I2V Mode">
+    When you upload a start frame, the studio automatically:
+    
+    - Switches to 60+ image-to-video models
+    - Updates the prompt placeholder to "Describe the motion or effect (optional)"
+    - Shows duration and quality controls for compatible I2V models
+  </Step>
+  
+  <Step title="Enter Motion Prompt (Optional)">
+    For image-to-video generation, the prompt is **optional**. Many models can animate images without text:
+    
+    ```
+    Example: "Slow zoom in with camera rotating clockwise"
+    Example: "Gentle wind blowing through hair and clothes"
+    Example: "Water rippling and splashing"
+    ```
+    
+    Leave the prompt empty to let the model decide the animation.
+  </Step>
+  
+  <Step title="Select I2V Model">
+    Browse 60+ image-to-video models:
+    
+    - **Seedance 2.0 I2V** — ByteDance · Up to 9 reference images · 5/10/15s · Quality basic/high
+    - **Kling v2.1 I2V** — High-quality image animation
+    - **Veo3 I2V** — Google's image-to-video model
+    - **Runway I2V** — Professional animation
+    - **Wan I2V** — Quality presets available
+    - **Midjourney v7 I2V** — Creative animation styles
+  </Step>
+  
+  <Step title="Generate Animation">
+    Click **Generate ✨** to animate your image. The API will:
+    
+    - Upload your start frame (if not already uploaded)
+    - Send the image URL and optional motion prompt to the model
+    - Return the animated video
+  </Step>
+</Steps>
+
+## Video Tools (V2V Mode)
+
+Video Studio also includes **video-to-video tools** for processing existing videos:
+
+### Accessing V2V Tools
+
+1. Click the **video upload button** (🎥 icon next to the image upload button)
+2. Select a video file from your device
+3. The studio switches to **V2V mode** and shows video processing models
+
+### Available Tools
+
+- **Watermark Removal** — Clean removal of video watermarks
+- **Video Upscaling** — Enhance resolution and quality
+- **Video Restoration** — Improve old or degraded videos
+
+<Note>
+In V2V mode, parameter controls (aspect ratio, duration, etc.) are **hidden** because the output matches the input video format.
+</Note>
+
+## Supported Models
+
+### Text-to-Video Models (40+)
+
+<Tabs>
+  <Tab title="Flagship Models">
+    | Model | Key Features |
+    | --- | --- |
+    | **Seedance 2.0** | ByteDance · Aspect ratios 16:9/9:16/4:3/3:4 · Duration 5/10/15s · Quality basic/high |
+    | **Kling v3** | Kuaishou · High motion quality · Natural physics |
+    | **Sora 2** | OpenAI · Natural motion · Advanced composition |
+    | **Veo 3** | Google · Smooth dynamics · Cinematic quality |
+    | **Wan 2.6** | Chinese model · Quality presets · Fast generation |
+    | **Runway Gen-3** | Professional synthesis · Artistic control |
+  </Tab>
+  
+  <Tab title="Additional Models">
+    - **Hailuo 2.3** — Fast generation, good quality
+    - **Seedance Pro** — Enhanced version of Seedance
+    - **Hunyuan Video** — Tencent's video model
+    - **Luma Dream Machine** — Creative video generation
+    - **Pika Labs** — Experimental video AI
+    - **CogVideoX** — Open-source video model
+    - And 30+ more models...
+  </Tab>
+</Tabs>
+
+### Image-to-Video Models (60+)
+
+<Tabs>
+  <Tab title="Animation Models">
+    | Model | Max Images | Key Features |
+    | --- | --- | --- |
+    | **Seedance 2.0 I2V** | 9 | ByteDance · 16:9/9:16/4:3/3:4 · 5/10/15s · Quality basic/high |
+    | **Kling v2.1 I2V** | 1 | High-quality animation · Natural motion |
+    | **Veo3 I2V** | 1 | Google · Smooth animation |
+    | **Runway I2V** | 1 | Professional quality · Artistic styles |
+    | **Midjourney v7 I2V** | 1 | Creative animation · Unique styles |
+  </Tab>
+  
+  <Tab title="Additional I2V Models">
+    - **Wan2.2 I2V** — Chinese model with quality presets
+    - **Hunyuan I2V** — Tencent's image animation
+    - **Luma I2V** — Creative image animation
+    - **Pika I2V** — Experimental animation
+    - **CogVideo I2V** — Open-source animation
+    - And 50+ more models...
+  </Tab>
+</Tabs>
+
+## Advanced Features
+
+### Video Extension (Seedance 2.0)
+
+When you generate a video using **Seedance 2.0 T2V** or **Seedance 2.0 I2V**, an **↗ Extend** button appears in the canvas controls.
+
+<Steps>
+  <Step title="Generate Initial Video">
+    Create a video using Seedance 2.0 (T2V or I2V mode).
+  </Step>
+  
+  <Step title="Click Extend Button">
+    After the video completes, click **↗ Extend** in the canvas controls.
+  </Step>
+  
+  <Step title="Studio Switches to Extend Mode">
+    The interface returns to the prompt bar and automatically:
+    
+    - Switches to **Seedance 2.0 Extend** model
+    - Shows an extend banner: "Extending previous Seedance 2.0 generation"
+    - Stores the `request_id` from your previous generation
+  </Step>
+  
+  <Step title="Add Continuation Prompt (Optional)">
+    Enter an optional prompt to guide how the video continues:
+    
+    ```
+    Example: "Camera continues panning to reveal a mountain range"
+    ```
+  </Step>
+  
+  <Step title="Generate Extension">
+    Click **Generate ✨** to seamlessly extend your video. The extension will:
+    
+    - Preserve style, motion, and audio from the original
+    - Continue for 5/10/15s (configurable)
+    - Maintain visual consistency
+  </Step>
+</Steps>
+
+<Info>
+The Extend feature requires a valid `request_id` from a Seedance 2.0 generation. If you switch models or clear history, the extend context is lost.
+</Info>
+
+### Duration and Aspect Ratio Controls
+
+Video Studio's control bar adapts to show only options supported by the selected model:
+
+**Aspect Ratio Button:**
+- Shows available aspect ratios (16:9, 9:16, 4:3, 3:4, 1:1, 21:9)
+- Hidden if the model doesn't support aspect ratio selection
+
+**Duration Button:**
+- Shows available durations (5s, 10s, 15s, 20s, etc.)
+- Hidden if the model uses fixed duration
+
+**Quality Button:**
+- Shows quality presets (basic, high) or resolution options
+- Hidden if the model doesn't support quality selection
+
+<Note>
+Controls automatically appear/disappear when you switch models, keeping the interface clean and focused.
+</Note>
+
+## Canvas & Video Playback
+
+When your video generation completes, the Video Studio transitions to the **canvas view**:
+
+<CardGroup cols={2}>
+  <Card title="Video Player" icon="circle-play">
+    Your video plays automatically in a native HTML5 video player with controls, looping, and autoplay (muted).
+  </Card>
+  <Card title="Action Buttons" icon="sliders">
+    - **↻ Regenerate** — Generate the same video again
+    - **↗ Extend** — Continue the video (Seedance 2.0 only)
+    - **↓ Download** — Save video as MP4
+    - **+ New** — Return to prompt bar for a new video
+  </Card>
+</CardGroup>
+
+### Video History Sidebar
+
+All video generations are saved to a **history sidebar**:
+
+- **Persistent storage** — Up to 30 videos saved in browser localStorage
+- **Video thumbnail previews** — Quick visual reference with hover preview
+- **Click to load** — Click any thumbnail to play in canvas
+- **Download from history** — Hover to download past videos
+
+<Warning>
+Video history is stored separately from image history. Each studio maintains its own generation history.
+</Warning>
+
+## Model Selection Tips
+
+<AccordionGroup>
+  <Accordion title="Best for Natural Motion">
+    - **Sora 2** — Most realistic physics and natural movement
+    - **Veo 3** — Smooth, cinematic motion
+    - **Kling v3** — High-quality motion with good physics
+  </Accordion>
+  
+  <Accordion title="Best for Speed">
+    - **Hailuo 2.3** — Fastest generation, good quality
+    - **Seedance 2.0 (basic quality)** — Fast with decent results
+    - **Wan 2.6** — Quick generation with quality presets
+  </Accordion>
+  
+  <Accordion title="Best for Quality">
+    - **Sora 2** — Highest overall quality
+    - **Veo 3** — Cinematic quality, professional results
+    - **Seedance 2.0 (high quality)** — Best ByteDance quality
+    - **Runway Gen-3** — Professional synthesis
+  </Accordion>
+  
+  <Accordion title="Best for Animation">
+    - **Midjourney v7 I2V** — Creative styles, artistic animation
+    - **Runway I2V** — Professional image animation
+    - **Seedance 2.0 I2V** — Multi-image support (up to 9 images)
+    - **Veo3 I2V** — Smooth, natural animation
+  </Accordion>
+</AccordionGroup>
+
+## Tips for Best Results
+
+<AccordionGroup>
+  <Accordion title="Writing Effective Video Prompts">
+    - **Describe motion** — "Camera pans left", "zoom in slowly", "object rotates"
+    - **Set the scene** — Time of day, location, weather, atmosphere
+    - **Include action** — What happens in the video from start to finish
+    - **Add style** — "cinematic", "time-lapse", "slow motion", "aerial view"
+    - **Keep it focused** — 5-10s videos work best with simple, focused scenes
+  </Accordion>
+  
+  <Accordion title="Image-to-Video Best Practices">
+    - **Use high-quality start frames** — Clear, well-composed images work best
+    - **Choose images with potential motion** — Hair, water, clouds, fabric
+    - **Avoid still portraits** — Models struggle to animate completely still subjects
+    - **Add motion prompts** — Guide the animation with specific motion descriptions
+    - **Try different models** — Each model animates images differently
+  </Accordion>
+  
+  <Accordion title="Duration and Quality Trade-offs">
+    - **5s videos** — Fastest generation, most reliable
+    - **10s videos** — Good balance of length and quality
+    - **15s+ videos** — Slower generation, may have consistency issues
+    - **Basic quality** — 2-3x faster, good for previews
+    - **High quality** — Slower, better detail and consistency
+  </Accordion>
+</AccordionGroup>
+
+## API Integration
+
+Video Studio uses the [Muapi.ai](https://muapi.ai) unified API:
+
+```javascript
+// Text-to-Video generation
+const result = await muapi.generateVideo({
+  model: 'seedance-v2.0-t2v',
+  prompt: 'A cinematic shot of a city at sunset',
+  aspect_ratio: '16:9',
+  duration: 10,
+  quality: 'high'
+});
+
+// Image-to-Video generation
+const result = await muapi.generateI2V({
+  model: 'seedance-v2.0-i2v',
+  image_url: 'https://...',
+  prompt: 'Gentle camera movement',
+  aspect_ratio: '16:9',
+  duration: 5,
+  quality: 'basic'
+});
+
+// Video extension
+const result = await muapi.generateVideo({
+  model: 'seedance-v2.0-extend',
+  request_id: 'previous_generation_id',
+  prompt: 'Continue the scene',
+  duration: 5
+});
+```
+
+See the [API Reference](/api/muapi-client) for complete documentation.
+
+## Related Features
+
+<CardGroup cols={3}>
+  <Card title="Upload History" icon="clock-rotate-left" href="/features/upload-history">
+    Reuse previously uploaded start frames
+  </Card>
+  <Card title="Generation History" icon="timeline" href="/features/generation-history">
+    Browse and download past video generations
+  </Card>
+  <Card title="Cinema Studio" icon="film" href="/features/cinema-studio">
+    Professional camera controls for cinematic shots
+  </Card>
+</CardGroup>

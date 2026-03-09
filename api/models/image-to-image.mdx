@@ -1,0 +1,399 @@
+---
+title: 'Image-to-Image Models'
+description: 'Edit and transform images using 55+ specialized models'
+icon: 'images'
+---
+
+## Overview
+
+The Image-to-Image API provides access to 55+ models that edit, transform, and enhance existing images. These models automatically activate when you upload a reference image in the Image Studio.
+
+<Note>
+Image-to-image models support single or **multi-image input** (up to 14 images for some models) for complex edits and style transfers.
+</Note>
+
+## Model Categories
+
+<AccordionGroup>
+  <Accordion title="Multi-Image Edit Models" icon="layer-group">
+    Advanced models that accept multiple reference images for complex transformations.
+    
+    - **Nano Banana 2 Edit** — Up to 14 images, 1K/2K/4K resolution
+    - **Nano Banana Edit** — Up to 10 images with auto aspect ratio
+    - **Nano Banana Pro Edit** — Up to 8 images with professional quality
+    - **Flux Kontext Dev I2I** — Up to 10 images for context-aware editing
+    - **GPT-4o Edit / Image-to-Image** — 5–10 images with natural language instructions
+    - **Bytedance Seedream Edit v4/v4.5** — Up to 10 images with dreamlike style transfer
+    - **Kling O1 Edit Image** — Up to 10 images with 1K/2K resolution
+    - **Flux 2 Flex/Pro Edit** — 8 images with next-gen quality
+    - **Vidu Q2 Reference to Image** — 7 images for cinematic composition
+  </Accordion>
+
+  <Accordion title="Style Transfer Models" icon="palette">
+    Apply artistic styles and effects to your images.
+    
+    - **Midjourney v7 I2I / Style Reference / Omni Reference** — Cinematic style transfer
+    - **Bytedance Seededit v3** — Natural language style changes
+    - **Flux Redux** — Reimagine scenes with new compositions
+    - **Higgsfield Soul I2I** — 100+ preset styles (DigitalCam, Grunge, Y2K, etc.)
+    - **Reve Image Edit** — Fantasy transformations with pose preservation
+    - **Flux Kontext Effects** — 13 effects (Age Progression, Cartoonify, Weather, etc.)
+    - **Image Effects** — 18 presets (Cyberpunk, Felt 3D, Lofi Pixel, etc.)
+    - **Nano Banana Effects** — 17 effects (3D Figurine, Famous Art, Decades, etc.)
+  </Accordion>
+
+  <Accordion title="Enhancement & Utility Tools" icon="wand-magic-sparkles">
+    Practical tools for image processing and enhancement.
+    
+    - **AI Image Upscaler** — Intelligent resolution enhancement
+    - **Topaz Image Upscale** — 1×/2×/4×/8× upscaling
+    - **Seedvr2 Image Upscale** — 2K/4K/8K upscaling
+    - **AI Background Remover** — Clean background extraction
+    - **AI Skin Enhancer** — Portrait retouching
+    - **AI Color Photo** — Black & white colorization
+    - **AI Object Eraser** — Remove unwanted objects
+    - **AI Image Extension** — Expand image boundaries
+  </Accordion>
+
+  <Accordion title="Subject & Character Models" icon="user">
+    Preserve identity while changing scenes or styles.
+    
+    - **Flux Pulid** — Identity-preserving generation
+    - **Minimax Image 01 Subject Reference** — Same-subject scene transfer
+    - **Ideogram Character** — Character consistency across scenes
+    - **AI Image Face Swap** — Face replacement with target index selection
+  </Accordion>
+
+  <Accordion title="Specialized Tools" icon="screwdriver-wrench">
+    Domain-specific editing capabilities.
+    
+    - **AI Dress Change** — Virtual try-on
+    - **AI Product Shot** — E-commerce background replacement
+    - **AI Product Photography** — Professional product staging
+    - **AI Ghibli Style** — Studio Ghibli anime transformation
+    - **Qwen Image Edit / Edit Plus / Edit Plus Lora** — Alibaba's multi-image editor with camera controls
+    - **Wan2.5/2.6 Image Edit** — 2–3 images with ultra-high resolution (up to 5000px)
+    - **Ideogram v3 Reframe** — Aspect ratio adjustment with content preservation
+  </Accordion>
+</AccordionGroup>
+
+## Popular Models
+
+| Model | Max Images | Resolution | Best For |
+|-------|-----------|-----------|----------|
+| **Nano Banana 2 Edit** | 14 | 1K/2K/4K | Complex multi-image edits with Google Search |
+| **Seedream 5.0 Edit** | 1 | Basic/High | Natural language style transfer |
+| **Flux Kontext Dev I2I** | 10 | Flexible | Context-aware transformations |
+| **GPT-4o Edit** | 10 | Standard | Natural language instructions |
+| **Midjourney v7 I2I** | 1 | Variable | Artistic and cinematic edits |
+| **Bytedance Seedream Edit v4** | 10 | 1K/2K/4K | Dreamlike style with high resolution |
+| **Kling O1 Edit** | 10 | 1K/2K | Cinematic detail preservation |
+| **Higgsfield Soul I2I** | 1 | Medium/High | 100+ preset styles |
+
+## Newly Added Models
+
+<Tip>
+These models were recently added and offer advanced multi-image capabilities.
+</Tip>
+
+### Nano Banana 2 Edit
+
+**Family:** Nano  
+**Max Images:** 14  
+**Resolution:** 1K / 2K / 4K  
+**Aspect Ratios:** Auto + 10 manual ratios
+
+<Accordion title="Features">
+- Industry-leading 14-image multi-reference support
+- Google Search enhancement for context
+- Resolution scaling from 1K to 4K
+- Automatic aspect ratio detection
+- Preserves consistency across multiple edits
+</Accordion>
+
+```json Example Request
+{
+  "model": "nano-banana-2-edit",
+  "images_list": [
+    "https://example.com/image1.jpg",
+    "https://example.com/image2.jpg"
+  ],
+  "prompt": "Change her facial expression to a confident smile, and adjust the lighting to dramatic blue and purple hues.",
+  "aspect_ratio": "auto",
+  "resolution": "4k"
+}
+```
+
+### Seedream 5.0 Edit
+
+**Family:** Seedream  
+**Max Images:** 1  
+**Quality:** Basic / High
+
+<Accordion title="Features">
+- ByteDance's latest edit model
+- Natural language style transfer
+- Quality presets for different use cases
+- Fast inference with high fidelity
+</Accordion>
+
+```json Example Request
+{
+  "model": "seedream-5.0-edit",
+  "image_url": "https://example.com/input.jpg",
+  "prompt": "Transform into a watercolor painting style, soft pastel colors, dreamy atmosphere.",
+  "quality": "high"
+}
+```
+
+## Multi-Image Input
+
+<Note>
+Models with `maxImages > 1` accept an array of image URLs sent in order. The order matters—the model processes images sequentially.
+</Note>
+
+### Multi-Image Model Support
+
+| Model | Max Images | Use Case |
+|-------|-----------|----------|
+| Nano Banana 2 Edit | 14 | Complex scene composition |
+| Nano Banana Edit | 10 | Multi-reference consistency |
+| Flux Kontext Dev I2I | 10 | Context-aware multi-image |
+| Kling O1 Edit Image | 10 | Cinematic multi-shot |
+| GPT-4o Edit | 10 | Natural language multi-edit |
+| Bytedance Seedream Edit v4/v4.5 | 10 | Dreamlike multi-reference |
+| Nano Banana Pro Edit | 8 | Professional multi-image |
+| Flux 2 Flex/Pro Edit | 8 | Next-gen multi-reference |
+| Vidu Q2 Reference to Image | 7 | Cinematic character scenes |
+| GPT-4o Image-to-Image | 5 | Multi-image reasoning |
+| Flux 2 Klein 4b/9b Edit | 4 | Lightweight multi-edit |
+| Qwen Image Edit Plus | 3 | Camera control with references |
+| Flux Kontext Pro/Max I2I | 2 | Dual-image style blend |
+| Wan2.5/2.6 Image Edit | 2–3 | Ultra-high resolution |
+
+### Example: Multi-Image Request
+
+```json
+{
+  "model": "flux-kontext-dev-i2i",
+  "images_list": [
+    "https://example.com/ref1.jpg",
+    "https://example.com/ref2.jpg",
+    "https://example.com/ref3.jpg"
+  ],
+  "prompt": "Combine the lighting from image 1, pose from image 2, and background from image 3 into a cohesive portrait.",
+  "aspect_ratio": "16:9",
+  "num_images": 1
+}
+```
+
+## Common Input Parameters
+
+### Image URL / Images List
+
+**Type:** `string` (single) or `array` (multi-image)  
+**Required:** Yes  
+**Format:** Publicly accessible HTTPS URL or Muapi uploaded file URL
+
+For single-image models, use `image_url`. For multi-image models, use `images_list` array.
+
+<Tip>
+Use the [Upload File](/api/upload) endpoint to host your images on Muapi infrastructure before sending them to models.
+</Tip>
+
+### Prompt
+
+**Type:** `string`  
+**Required:** Varies by model (optional for some utility tools)  
+**Max Length:** 1500–3000 characters
+
+Describe the transformation you want. Be specific about what should change and what should stay the same.
+
+**Example Prompts:**
+
+```text
+Good: "Replace the barista with a humanoid robot in a sleek metallic design."
+
+Better: "Keep the café scene unchanged but replace the barista with a humanoid robot 
+with chrome finish, glowing blue eyes, and futuristic design. Preserve lighting and atmosphere."
+```
+
+### Strength
+
+**Type:** `float`  
+**Range:** 0.0–1.0  
+**Default:** 0.5–0.6
+
+Controls how much the output differs from the input. Higher values = more transformation; lower values = subtle changes.
+
+### Aspect Ratio
+
+**Type:** `string`  
+**Options:** `Auto`, `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `2:3`, `3:2`, `21:9`, etc.
+
+Some models support auto-detection or offer 10+ ratio options.
+
+## Model-Specific Features
+
+<AccordionGroup>
+  <Accordion title="Higgsfield Soul I2I — 100+ Style Presets">
+    
+    Select from curated style presets:
+    
+    **Photography:** DigitalCam, 90s Grain, 2000s Cam, CCTV, iPhone  
+    **Fashion:** Coquette core, Y2K, Gorpcore, Indie sleaze, Grunge  
+    **Eras:** 1920s/1950s/1970s/1980s Decade, 2000s Fashion  
+    **Art Styles:** Ghibli, Tumblr, Avant-garde, Mixed Media  
+    **Effects:** Glitch, Fisheye, 0.5 Selfie, Overexposed, Foggy Morning
+    
+    ```json
+    {
+      "model": "higgsfield-soul-image-to-image",
+      "image_url": "...",
+      "prompt": "Transform into cinematic editorial portrait...",
+      "style": "90's Editorial",
+      "aspect_ratio": "9:16",
+      "strength": 0.7,
+      "quality": "high"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Qwen Image Edit Plus Lora — Camera Controls">
+    
+    Precise camera adjustments without prompts:
+    
+    - **Rotate Right-Left:** -90° to +90° (positive = left, negative = right)
+    - **Move Forward:** 0–10 (0 = no movement, 10 = close-up)
+    - **Vertical Angle:** -1 to +1 (-1 = bird's eye, 0 = neutral, +1 = worm's-eye)
+    - **Wide-Angle Lens:** Boolean toggle
+    
+    ```json
+    {
+      "model": "qwen-image-edit-plus-lora",
+      "images_list": [...],
+      "rotate_right_left": 15,
+      "move_forward": 3.5,
+      "vertical_angle": -0.5,
+      "wide_angle_lens": true
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Midjourney v7 — Advanced Edit Controls">
+    
+    **Speed:** `relaxed` | `fast` | `turbo`  
+    **Variety:** 0–100  
+    **Stylization:** 0–1000  
+    **Weirdness:** 0–3000  
+    **Weight** (Omni Reference only): 1–1000 (reference influence)
+  </Accordion>
+
+  <Accordion title="Flux Kontext Effects — 13 Effect Types">
+    
+    - Age Progression
+    - Background Change
+    - Cartoonify
+    - Color Correction
+    - Expression Change
+    - Face Enhancement
+    - Hair Change
+    - Object Removal
+    - Professional Photo
+    - Scene Composition
+    - Style Transfer
+    - Time of Day
+    - Weather Effect
+    
+    Each effect requires a prompt describing the desired change.
+  </Accordion>
+</AccordionGroup>
+
+## Utility Tools (No Prompt Required)
+
+<Note>
+These tools automatically process images without text prompts.
+</Note>
+
+| Tool | Function | Parameters |
+|------|----------|------------|
+| **AI Image Upscaler** | Enhance resolution | None |
+| **Topaz Image Upscale** | Professional upscaling | `upscale_factor`: 1, 2, 4, 8 |
+| **Seedvr2 Image Upscale** | Ultra-high resolution | `resolution`: 2k, 4k, 8k |
+| **AI Background Remover** | Extract subject | None |
+| **AI Skin Enhancer** | Portrait retouching | None |
+| **AI Color Photo** | Colorize B&W images | None |
+| **AI Ghibli Style** | Anime transformation | None |
+| **AI Image Extension** | Expand boundaries | None |
+| **Image Passthrough** | Identity function | `make_input`: true |
+
+## Example Use Cases
+
+<AccordionGroup>
+  <Accordion title="Product Photography">
+    ```json
+    {
+      "model": "ai-product-shot",
+      "image_url": "https://example.com/watch.jpg",
+      "scene_description": "on a rock, next to the ocean, dark theme"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Portrait Style Transfer">
+    ```json
+    {
+      "model": "reve-image-edit",
+      "image_url": "https://example.com/portrait.jpg",
+      "prompt": "A photorealistic fantasy portrait, transforming the woman into an elegant high elf. Give her long, gracefully pointed ears. Her skin has a subtle, ethereal glow. Replace her blazer with ornate elven robes made of shimmering silver fabric."
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Multi-Image Composition">
+    ```json
+    {
+      "model": "nano-banana-2-edit",
+      "images_list": [
+        "https://example.com/ref1.jpg",
+        "https://example.com/ref2.jpg",
+        "https://example.com/ref3.jpg"
+      ],
+      "prompt": "Combine the character from image 1, the background from image 2, and the lighting mood from image 3. Maintain consistency in style and color grading.",
+      "resolution": "2k"
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## API Endpoints
+
+All image-to-image models use the unified endpoint pattern:
+
+```bash
+POST /api/v1/{model-endpoint}
+```
+
+Refer to the [Generate Image-to-Image](/api/generate/image-to-image) guide for integration details.
+
+## Model Selection Tips
+
+<Tip>
+**For multi-image edits:** Use Nano Banana 2 Edit (14 images), Flux Kontext Dev (10 images), or Kling O1 Edit (10 images).
+
+**For natural language edits:** Use GPT-4o Edit or Bytedance Seededit v3.
+
+**For style presets:** Use Higgsfield Soul I2I (100+ styles) or Flux Kontext Effects.
+
+**For upscaling:** Use Topaz (professional), Seedvr2 (8K), or AI Image Upscaler (automatic).
+
+**For identity preservation:** Use Flux Pulid, Minimax Subject Reference, or Ideogram Character.
+</Tip>
+
+## Best Practices
+
+1. **Upload First:** Use the [Upload File](/api/upload) endpoint to host images before sending them to models.
+2. **Order Matters:** For multi-image models, the sequence of images affects the result.
+3. **Be Specific:** Describe what should change AND what should stay the same.
+4. **Test Strength:** Start with 0.5 and adjust based on results.
+5. **Resolution:** Higher resolutions consume more credits but provide better quality.

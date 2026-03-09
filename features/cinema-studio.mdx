@@ -1,0 +1,466 @@
+---
+title: 'Cinema Studio'
+description: 'Professional camera controls for photorealistic cinematic image generation with precise lens, focal length, and aperture settings'
+icon: 'film'
+---
+
+The **Cinema Studio** brings Higgsfield AI-style professional cinematography workflows to your image generation. Control virtual cameras, lenses, focal lengths, and apertures to create photorealistic cinematic shots with precise technical specifications.
+
+## Overview
+
+Cinema Studio is designed for users who want **professional control** over the virtual camera:
+
+<CardGroup cols={2}>
+  <Card title="Camera Controls" icon="video">
+    Choose from 6 professional cinema cameras ranging from modular 8K digital to classic 16mm film.
+  </Card>
+  <Card title="Lens Selection" icon="camera">
+    Select from 11 cinema lenses including anamorphic, macro, vintage prime, and tilt lenses.
+  </Card>
+  <Card title="Focal Length" icon="ruler">
+    Pick focal lengths from 8mm ultra-wide to 85mm tight portrait with perspective presets.
+  </Card>
+  <Card title="Aperture Control" icon="circle-half-stroke">
+    Control depth of field with f/1.4 (shallow), f/4 (balanced), or f/11 (deep focus).
+  </Card>
+</CardGroup>
+
+## How It Works
+
+Cinema Studio uses **prompt modifiers** to translate your camera settings into optimized text descriptions that guide the AI model.
+
+### The Prompt Compilation Process
+
+<Steps>
+  <Step title="Enter Base Prompt">
+    Start with your creative scene description:
+    
+    ```
+    "A female warrior standing on a cliff during golden hour"
+    ```
+  </Step>
+  
+  <Step title="Select Camera Settings">
+    Choose your technical specifications:
+    
+    - **Camera**: Modular 8K Digital
+    - **Lens**: Classic Anamorphic
+    - **Focal Length**: 50mm
+    - **Aperture**: f/1.4
+  </Step>
+  
+  <Step title="Studio Compiles Final Prompt">
+    Cinema Studio automatically combines your prompt with technical modifiers:
+    
+    ```
+    "A female warrior standing on a cliff during golden hour, 
+    shot on a modular 8K digital cinema camera, 
+    using a classic anamorphic lens at 50mm (standard portrait perspective), 
+    aperture f/1.4, shallow depth of field, creamy bokeh, 
+    cinematic lighting, natural color science, high dynamic range, 
+    professional photography, ultra-detailed, 8K resolution"
+    ```
+  </Step>
+  
+  <Step title="Generate with Nano Banana Pro">
+    The compiled prompt is sent to **Nano Banana Pro** (Google Gemini 3.1 Flash Image) with your selected aspect ratio and resolution.
+  </Step>
+</Steps>
+
+<Info>
+The prompt compilation logic is fully open-source in `src/lib/promptUtils.js`. You can customize the modifiers to match your preferred prompting style.
+</Info>
+
+## Using Cinema Studio
+
+<Steps>
+  <Step title="Enter Your Scene Description">
+    Type your creative prompt in the floating prompt bar at the bottom:
+    
+    ```
+    Example: "A vintage red car parked on a cobblestone street in Paris at sunset"
+    ```
+    
+    Focus on the **subject, setting, lighting, and mood**. Cinema Studio will add the technical camera details automatically.
+  </Step>
+  
+  <Step title="Open Camera Controls">
+    Click the **summary card** (next to the Generate button) to open the camera controls overlay. This shows:
+    
+    - Current camera: "Modular 8K Digital"
+    - Current settings: "Classic Anamorphic, 50mm, f/1.4"
+    - A glowing dot indicator
+  </Step>
+  
+  <Step title="Select Camera Equipment">
+    In the overlay, scroll through the four categories:
+    
+    **Camera** — Choose your cinema camera body
+    **Lens** — Select the lens type and characteristics
+    **Focal Length** — Pick the perspective (8mm to 85mm)
+    **Aperture** — Set the depth of field (f/1.4 to f/11)
+    
+    Each option shows a preview of the modifier that will be added to your prompt.
+  </Step>
+  
+  <Step title="Configure Aspect Ratio & Resolution">
+    In the prompt bar, set:
+    
+    **Aspect Ratio:**
+    - `16:9` — Cinematic widescreen
+    - `21:9` — Ultra-wide cinematic
+    - `9:16` — Vertical portrait
+    - `1:1` — Square format
+    - `4:5` — Classic portrait
+    
+    **Resolution:**
+    - `1K` — 1024px (fast, preview quality)
+    - `2K` — 2048px (balanced)
+    - `4K` — 4096px (highest detail, slower)
+  </Step>
+  
+  <Step title="Generate Your Shot">
+    Click **GENERATE ✨** to create your cinematic image. The studio will:
+    
+    - Compile your prompt with camera modifiers
+    - Send to Nano Banana Pro with your settings
+    - Display the result in the canvas
+    - Save to history with full settings for future reference
+  </Step>
+</Steps>
+
+## Camera Options
+
+Cinema Studio offers **6 professional cinema cameras**, each with distinct characteristics:
+
+<Tabs>
+  <Tab title="Digital Cameras">
+    | Camera | Prompt Modifier | Best For |
+    | --- | --- | --- |
+    | **Modular 8K Digital** | "modular 8K digital cinema camera" | High-resolution, modern cinematography |
+    | **Full-Frame Cine Digital** | "full-frame digital cinema camera" | Professional cinematic look, shallow DOF |
+    | **Premium Large Format Digital** | "premium large-format digital cinema camera" | Ultra-high detail, immersive perspective |
+    | **Studio Digital S35** | "Super 35 studio digital camera" | Classic cinema sensor size, versatile |
+  </Tab>
+  
+  <Tab title="Film Cameras">
+    | Camera | Prompt Modifier | Best For |
+    | --- | --- | --- |
+    | **Grand Format 70mm Film** | "grand format 70mm film camera" | Epic scale, film grain, analog warmth |
+    | **Classic 16mm Film** | "classic 16mm film camera" | Vintage aesthetic, documentary feel |
+  </Tab>
+</Tabs>
+
+## Lens Options
+
+Choose from **11 cinema lenses** with unique optical characteristics:
+
+<Tabs>
+  <Tab title="Creative Lenses">
+    | Lens | Prompt Modifier | Effect |
+    | --- | --- | --- |
+    | **Classic Anamorphic** | "classic anamorphic lens" | Widescreen, oval bokeh, lens flares |
+    | **Compact Anamorphic** | "compact anamorphic lens" | Lighter anamorphic character |
+    | **Creative Tilt Lens** | "creative tilt lens effect" | Selective focus, miniature effect |
+    | **Swirl Bokeh Portrait** | "swirl bokeh portrait lens" | Dreamy, swirling out-of-focus areas |
+    | **Vintage Prime** | "vintage prime lens" | Soft rendering, vintage character |
+  </Tab>
+  
+  <Tab title="Technical Lenses">
+    | Lens | Prompt Modifier | Effect |
+    | --- | --- | --- |
+    | **Premium Modern Prime** | "premium modern prime lens" | Sharp, clinical, minimal distortion |
+    | **Clinical Sharp Prime** | "ultra-sharp clinical prime lens" | Maximum sharpness, technical accuracy |
+    | **Warm Cinema Prime** | "warm-toned cinema prime lens" | Warm color cast, cinematic feel |
+    | **70s Cinema Prime** | "1970s cinema prime lens" | Retro rendering, 70s film aesthetic |
+    | **Extreme Macro** | "extreme macro lens" | Extreme close-ups, high magnification |
+    | **Halation Diffusion** | "halation diffusion filter" | Soft glow, dreamlike quality |
+  </Tab>
+</Tabs>
+
+## Focal Length Options
+
+Select from **6 focal lengths** (8mm to 85mm) with automatic perspective modifiers:
+
+| Focal Length | Perspective | Best For |
+| --- | --- | --- |
+| **8mm** | Ultra-wide perspective | Dramatic wide shots, environmental context |
+| **14mm** | Wide-angle perspective | Architecture, landscapes, interiors |
+| **24mm** | Wide-angle dynamic perspective | Environmental portraits, storytelling |
+| **35mm** | Natural cinematic perspective | Human eye view, balanced composition |
+| **50mm** | Standard portrait perspective | Classic portraits, natural look |
+| **85mm** | Classic portrait perspective | Tight portraits, flattering compression |
+
+### How Focal Length Affects Your Image
+
+<CardGroup cols={3}>
+  <Card title="8-24mm (Wide)" icon="panorama">
+    - Exaggerated perspective
+    - Deep depth of field
+    - Environmental context
+    - Dramatic foreground
+  </Card>
+  <Card title="35-50mm (Standard)" icon="eye">
+    - Natural perspective
+    - Human eye view
+    - Balanced composition
+    - Versatile framing
+  </Card>
+  <Card title="85mm (Telephoto)" icon="magnifying-glass">
+    - Compressed perspective
+    - Shallow depth of field
+    - Flattering portraits
+    - Isolated subjects
+  </Card>
+</CardGroup>
+
+## Aperture Options
+
+Control depth of field with **3 aperture settings**:
+
+| Aperture | Effect | Prompt Modifier | Best For |
+| --- | --- | --- | --- |
+| **f/1.4** | Shallow depth of field | "shallow depth of field, creamy bokeh" | Portraits, subject isolation, dreamy aesthetic |
+| **f/4** | Balanced depth of field | "balanced depth of field" | General photography, versatile |
+| **f/11** | Deep focus | "deep focus clarity, sharp foreground to background" | Landscapes, architecture, group shots |
+
+### Depth of Field Guide
+
+<AccordionGroup>
+  <Accordion title="f/1.4 (Shallow DOF)">
+    - **Subject isolation** — Sharp subject, blurred background
+    - **Bokeh** — Creamy, smooth out-of-focus areas
+    - **Low light** — Better performance in dark scenes
+    - **Portrait-friendly** — Flattering for faces
+    - **Use cases**: Portraits, product shots, cinematic close-ups
+  </Accordion>
+  
+  <Accordion title="f/4 (Balanced DOF)">
+    - **Versatile** — Good balance of sharpness and blur
+    - **Moderate isolation** — Subject stands out, background visible
+    - **General purpose** — Works for most scenes
+    - **Use cases**: Street photography, environmental portraits, storytelling
+  </Accordion>
+  
+  <Accordion title="f/11 (Deep Focus)">
+    - **Everything sharp** — Foreground to background in focus
+    - **Environmental context** — Shows full scene detail
+    - **Maximum detail** — No blur, all elements visible
+    - **Use cases**: Landscapes, architecture, group photos, establishing shots
+  </Accordion>
+</AccordionGroup>
+
+## Generation History
+
+Cinema Studio includes a **persistent history sidebar** that saves up to 50 generations:
+
+<CardGroup cols={2}>
+  <Card title="Settings Preservation" icon="floppy-disk">
+    Each history entry stores the full camera setup (camera, lens, focal, aperture, aspect ratio, resolution, prompt).
+  </Card>
+  <Card title="One-Click Reload" icon="rotate-left">
+    Click any history thumbnail to restore the exact settings and view the result.
+  </Card>
+</CardGroup>
+
+### History Features
+
+- **Thumbnail previews** — Visual reference of past generations
+- **Settings stored** — Full camera and prompt data saved per generation
+- **localStorage persistence** — Survives browser restarts
+- **Click to restore** — Instantly reload settings from any past generation
+- **Active indicator** — Current generation highlighted with glow
+
+<Info>
+When you click a history item, the prompt bar automatically updates with the original prompt and camera settings, making it easy to iterate on past shots.
+</Info>
+
+## Canvas Actions
+
+After generation, the canvas view provides three action buttons:
+
+- **↻ Regenerate** — Run the same generation again (useful for variations)
+- **↓ Download** — Save image as JPEG to your device
+- **+ New Shot** — Clear prompt and return to the prompt bar
+
+## Use Cases for Cinematic Shots
+
+<Tabs>
+  <Tab title="Portrait Photography">
+    **Settings:**
+    - Camera: Full-Frame Cine Digital
+    - Lens: Premium Modern Prime
+    - Focal: 85mm
+    - Aperture: f/1.4
+    - Aspect Ratio: 4:5 or 9:16
+    
+    **Prompt Example:**
+    ```
+    "Professional headshot of a businesswoman in natural light, modern office background"
+    ```
+    
+    **Result:** Flattering compression, shallow DOF, sharp subject, creamy bokeh background.
+  </Tab>
+  
+  <Tab title="Cinematic Landscapes">
+    **Settings:**
+    - Camera: Grand Format 70mm Film
+    - Lens: Premium Modern Prime
+    - Focal: 24mm
+    - Aperture: f/11
+    - Aspect Ratio: 21:9
+    
+    **Prompt Example:**
+    ```
+    "Aerial view of a winding road through mountain valley during golden hour, mist in valleys"
+    ```
+    
+    **Result:** Epic scale, film grain, deep focus, widescreen cinematic composition.
+  </Tab>
+  
+  <Tab title="Vintage Aesthetic">
+    **Settings:**
+    - Camera: Classic 16mm Film
+    - Lens: 70s Cinema Prime
+    - Focal: 35mm
+    - Aperture: f/4
+    - Aspect Ratio: 4:3
+    
+    **Prompt Example:**
+    ```
+    "Street scene in New York City 1970s, yellow cabs, vintage fashion, grain and warmth"
+    ```
+    
+    **Result:** Vintage film look, retro color grading, period-appropriate rendering.
+  </Tab>
+  
+  <Tab title="Anamorphic Cinematic">
+    **Settings:**
+    - Camera: Modular 8K Digital
+    - Lens: Classic Anamorphic
+    - Focal: 50mm
+    - Aperture: f/1.4
+    - Aspect Ratio: 21:9
+    
+    **Prompt Example:**
+    ```
+    "Epic sci-fi cityscape at night, neon lights, rain-soaked streets, lens flares from streetlights"
+    ```
+    
+    **Result:** Widescreen cinematic, oval bokeh, horizontal lens flares, Hollywood blockbuster aesthetic.
+  </Tab>
+  
+  <Tab title="Product Photography">
+    **Settings:**
+    - Camera: Studio Digital S35
+    - Lens: Extreme Macro
+    - Focal: 50mm
+    - Aperture: f/4
+    - Aspect Ratio: 1:1
+    
+    **Prompt Example:**
+    ```
+    "Luxury watch close-up on marble surface, dramatic side lighting, metallic reflections"
+    ```
+    
+    **Result:** Sharp detail, balanced DOF, commercial product shot quality.
+  </Tab>
+</Tabs>
+
+## Tips for Best Results
+
+<AccordionGroup>
+  <Accordion title="Matching Camera to Scene">
+    - **Modern/Tech** → Modular 8K Digital, Premium Modern Prime
+    - **Classic/Timeless** → Full-Frame Cine Digital, Vintage Prime
+    - **Epic/Grand** → Grand Format 70mm Film, wide focal lengths
+    - **Intimate/Personal** → Classic 16mm Film, 35-50mm focal
+  </Accordion>
+  
+  <Accordion title="Focal Length Selection">
+    - **Landscapes** → 8mm, 14mm, 24mm (wide)
+    - **Environmental Portraits** → 24mm, 35mm (natural)
+    - **Classic Portraits** → 50mm, 85mm (flattering)
+    - **Product Shots** → 50mm, 85mm (no distortion)
+  </Accordion>
+  
+  <Accordion title="Aperture Selection">
+    - **Portrait isolation** → f/1.4 (shallow DOF)
+    - **Street photography** → f/4 (balanced)
+    - **Landscape detail** → f/11 (deep focus)
+    - **Low light scenes** → f/1.4 (more light)
+  </Accordion>
+  
+  <Accordion title="Prompt Writing for Cinema Studio">
+    - **Focus on subject and scene** — Let Cinema Studio handle technical details
+    - **Describe lighting** — "golden hour", "dramatic side lighting", "soft diffused light"
+    - **Set the mood** — "moody", "ethereal", "dramatic", "serene"
+    - **Avoid technical terms** — Don't repeat camera settings in your prompt
+    - **Keep it concise** — 10-20 words is often enough
+  </Accordion>
+</AccordionGroup>
+
+## Technical Details
+
+### Model: Nano Banana Pro
+
+Cinema Studio uses **Nano Banana Pro** (Google Gemini 3.1 Flash Image) for all generations:
+
+- **Provider**: Google
+- **Engine**: Gemini 3.1 Flash Image
+- **Strengths**: Photorealism, prompt adherence, technical accuracy
+- **Resolutions**: 1K, 2K, 4K
+- **Google Search Enhancement**: Automatically enabled for better context
+
+### Prompt Compilation Logic
+
+The prompt compilation process (from `src/lib/promptUtils.js`) combines:
+
+1. **Base prompt** — Your creative scene description
+2. **Camera descriptor** — "shot on a [camera name]"
+3. **Lens descriptor** — "using a [lens name] at [focal]mm ([perspective])"
+4. **Aperture descriptor** — "aperture [f-stop], [DOF effect]"
+5. **Lighting tags** — "cinematic lighting, natural color science, high dynamic range"
+6. **Quality tags** — "professional photography, ultra-detailed, 8K resolution"
+
+All modifiers are joined with commas and sent as a single prompt to the model.
+
+## API Integration
+
+Cinema Studio uses the standard Muapi.ai image generation endpoint:
+
+```javascript
+import { buildNanoBananaPrompt } from './lib/promptUtils.js';
+
+const finalPrompt = buildNanoBananaPrompt(
+  "A female warrior on a cliff at sunset",
+  "Modular 8K Digital",
+  "Classic Anamorphic",
+  50,
+  "f/1.4"
+);
+
+const result = await muapi.generateImage({
+  model: 'nano-banana-pro',
+  prompt: finalPrompt,
+  aspect_ratio: '21:9',
+  resolution: '2k',
+  negative_prompt: 'blurry, low quality, distortion, bad composition'
+});
+```
+
+See the [API Reference](/api/muapi-client) for complete documentation.
+
+## Related Features
+
+<CardGroup cols={3}>
+  <Card title="Image Studio" icon="image" href="/features/image-studio">
+    Standard image generation with 50+ models
+  </Card>
+  <Card title="Generation History" icon="timeline" href="/features/generation-history">
+    Browse and download past cinematic shots
+  </Card>
+  <Card title="Upload History" icon="clock-rotate-left" href="/features/upload-history">
+    Reuse reference images for image-to-image
+  </Card>
+</CardGroup>

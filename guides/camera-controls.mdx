@@ -1,0 +1,789 @@
+---
+title: Camera Controls Guide
+description: Master Cinema Studio's professional camera, lens, and aperture controls
+---
+
+## Overview
+
+Cinema Studio in Open Higgsfield AI provides professional-grade camera controls that transform your prompts into cinematic imagery. By selecting cameras, lenses, focal lengths, and aperture settings, you can achieve Hollywood-quality visual styles.
+
+## How Camera Controls Work
+
+Cinema Studio uses the **Nano Banana** and **Nano Banana Pro** models with advanced prompt engineering. Your camera selections are automatically translated into technical photography terms and appended to your prompt:
+
+```javascript
+// From src/lib/promptUtils.js:48-74
+export function buildNanoBananaPrompt(basePrompt, camera, lens, focalLength, aperture) {
+    const parts = [
+        basePrompt,
+        `shot on a ${cameraDesc}`,
+        `using a ${lensDesc} at ${focalLength}mm (${perspective})`,
+        `aperture ${aperture}`,
+        depthEffect,
+        "cinematic lighting",
+        "natural color science",
+        "high dynamic range",
+        "professional photography, ultra-detailed, 8K resolution"
+    ];
+    
+    return parts.join(", ");
+}
+```
+
+<Info>
+**Example Transformation:**
+
+Your prompt: `"A lone astronaut on Mars"`
+
+With Cinema Studio:
+`"A lone astronaut on Mars, shot on a full-frame digital cinema camera, using a premium modern prime lens at 50mm (standard portrait perspective), aperture f/1.4, shallow depth of field, creamy bokeh, cinematic lighting, natural color science, high dynamic range, professional photography, ultra-detailed, 8K resolution"`
+</Info>
+
+## Camera Types
+
+### Available Cameras
+
+Cinema Studio offers 6 professional camera systems, each with distinct characteristics:
+
+<AccordionGroup>
+  <Accordion title="Modular 8K Digital" icon="camera">
+    **Technical Prompt:** `"modular 8K digital cinema camera"`
+
+    **Characteristics:**
+    - Ultra-high resolution capture
+    - Modular sensor design
+    - Maximum detail and sharpness
+    - Clinical, precise image quality
+
+    **Best For:**
+    - Landscapes requiring extreme detail
+    - VFX-heavy shots
+    - Large-format prints
+    - Technical/product photography
+
+    **Visual Style:** Clean, sharp, modern
+
+    **Real-World Equivalent:** RED V-RAPTOR, ARRI ALEXA 65
+  </Accordion>
+
+  <Accordion title="Full-Frame Cine Digital" icon="camera">
+    **Technical Prompt:** `"full-frame digital cinema camera"`
+
+    **Characteristics:**
+    - Versatile full-frame sensor
+    - Excellent low-light performance
+    - Shallow depth of field capability
+    - Balanced dynamic range
+
+    **Best For:**
+    - Feature films
+    - Portraits
+    - Low-light scenes
+    - General-purpose cinematography
+
+    **Visual Style:** Cinematic, professional, balanced
+
+    **Real-World Equivalent:** Sony FX9, Canon C500 Mark II
+  </Accordion>
+
+  <Accordion title="Grand Format 70mm Film" icon="film">
+    **Technical Prompt:** `"grand format 70mm film camera"`
+
+    **Characteristics:**
+    - Large film grain texture
+    - Rich, organic color rendition
+    - Subtle halation glow
+    - Vintage Hollywood aesthetic
+
+    **Best For:**
+    - Epic establishing shots
+    - Period pieces
+    - Dramatic landscapes
+    - Nostalgic/vintage feels
+
+    **Visual Style:** Warm, organic, epic
+
+    **Real-World Equivalent:** Panavision System 65, IMAX film cameras
+  </Accordion>
+
+  <Accordion title="Studio Digital S35" icon="camera">
+    **Technical Prompt:** `"Super 35 studio digital camera"`
+
+    **Characteristics:**
+    - Industry-standard S35 sensor size
+    - Excellent lens compatibility
+    - Balanced depth of field
+    - Professional color science
+
+    **Best For:**
+    - TV production
+    - Commercials
+    - Documentaries
+    - Multi-camera setups
+
+    **Visual Style:** Professional, broadcast-quality
+
+    **Real-World Equivalent:** ARRI AMIRA, Sony F55
+  </Accordion>
+
+  <Accordion title="Classic 16mm Film" icon="film">
+    **Technical Prompt:** `"classic 16mm film camera"`
+
+    **Characteristics:**
+    - Visible film grain
+    - Nostalgic 70s-90s aesthetic
+    - Softer contrast
+    - Indie/documentary feel
+
+    **Best For:**
+    - Indie films
+    - Music videos
+    - Retro aesthetics
+    - Intimate documentaries
+
+    **Visual Style:** Gritty, authentic, nostalgic
+
+    **Real-World Equivalent:** Arriflex 16SR, Bolex H16
+  </Accordion>
+
+  <Accordion title="Premium Large Format Digital" icon="camera">
+    **Technical Prompt:** `"premium large-format digital cinema camera"`
+
+    **Characteristics:**
+    - Larger-than-full-frame sensor
+    - Ultra-shallow depth of field
+    - Exceptional detail and color
+    - High-end commercial look
+
+    **Best For:**
+    - High-end commercials
+    - Fashion photography
+    - Premium brand content
+    - Portraits with extreme bokeh
+
+    **Visual Style:** Luxurious, ultra-cinematic
+
+    **Real-World Equivalent:** ARRI ALEXA LF, Sony VENICE
+  </Accordion>
+</AccordionGroup>
+
+## Lens Characteristics
+
+Lenses dramatically affect your image's look and feel. Cinema Studio provides 11 lens types:
+
+<Tabs>
+  <Tab title="Anamorphic">
+    ### Compact Anamorphic
+    **Technical Prompt:** `"compact anamorphic lens"`
+
+    **Visual Traits:**
+    - Horizontal lens flares
+    - Oval bokeh
+    - 2.39:1 cinematic aspect feel
+    - Slight image distortion
+
+    **Use Cases:** Sci-fi, action, epic dramas
+
+    ---
+
+    ### Classic Anamorphic
+    **Technical Prompt:** `"classic anamorphic lens"`
+
+    **Visual Traits:**
+    - Vintage horizontal flares
+    - Blue streak flares
+    - Warmer color cast
+    - More pronounced distortion
+
+    **Use Cases:** Period pieces, vintage aesthetics, Star Wars-style looks
+  </Tab>
+
+  <Tab title="Prime Lenses">
+    ### Premium Modern Prime
+    **Technical Prompt:** `"premium modern prime lens"`
+
+    **Visual Traits:**
+    - Ultra-sharp across frame
+    - Minimal aberrations
+    - Clean bokeh
+    - Neutral color rendition
+
+    **Use Cases:** Commercial, product shots, modern films
+
+    ---
+
+    ### Warm Cinema Prime
+    **Technical Prompt:** `"warm-toned cinema prime lens"`
+
+    **Visual Traits:**
+    - Warm, golden color cast
+    - Gentle contrast
+    - Smooth skin tones
+    - Flattering highlights
+
+    **Use Cases:** Romantic scenes, golden hour, beauty shots
+
+    ---
+
+    ### Vintage Prime
+    **Technical Prompt:** `"vintage prime lens"`
+
+    **Visual Traits:**
+    - Lower contrast
+    - Softer edges
+    - Warmer, nostalgic colors
+    - Slight vignetting
+
+    **Use Cases:** Period films, retro aesthetics, indie films
+
+    ---
+
+    ### Clinical Sharp Prime
+    **Technical Prompt:** `"ultra-sharp clinical prime lens"`
+
+    **Visual Traits:**
+    - Maximum sharpness
+    - High contrast
+    - Neutral colors
+    - No distortion
+
+    **Use Cases:** Medical, technical, VFX plates, precision work
+  </Tab>
+
+  <Tab title="Special Effects">
+    ### Creative Tilt Lens
+    **Technical Prompt:** `"creative tilt lens effect"`
+
+    **Visual Traits:**
+    - Miniature/toy effect
+    - Slanted plane of focus
+    - Artistic blur
+    - Unique perspective
+
+    **Use Cases:** Artistic shots, cityscapes, creative portraits
+
+    ---
+
+    ### Swirl Bokeh Portrait
+    **Technical Prompt:** `"swirl bokeh portrait lens"`
+
+    **Visual Traits:**
+    - Swirling out-of-focus areas
+    - Dreamy, ethereal quality
+    - Unique bokeh character
+    - Vintage look
+
+    **Use Cases:** Portraits, fantasy, dreamy aesthetics
+
+    ---
+
+    ### Halation Diffusion
+    **Technical Prompt:** `"halation diffusion filter"`
+
+    **Visual Traits:**
+    - Glowing highlights
+    - Soft, dreamy quality
+    - Reduced contrast
+    - Romantic atmosphere
+
+    **Use Cases:** Music videos, beauty shots, romantic scenes
+  </Tab>
+
+  <Tab title="Specialty">
+    ### Extreme Macro
+    **Technical Prompt:** `"extreme macro lens"`
+
+    **Visual Traits:**
+    - Ultra-close focus
+    - Extreme detail
+    - Very shallow depth of field
+    - Magnified textures
+
+    **Use Cases:** Product details, nature, insects, textures
+
+    ---
+
+    ### 70s Cinema Prime
+    **Technical Prompt:** `"1970s cinema prime lens"`
+
+    **Visual Traits:**
+    - Softer contrast
+    - Warmer, muted colors
+    - Slight halation
+    - Classic film look
+
+    **Use Cases:** Period films (1970s-80s), retro aesthetics, nostalgic mood
+  </Tab>
+</Tabs>
+
+## Focal Length Guide
+
+Focal length controls perspective and field of view. Cinema Studio offers 6 focal lengths:
+
+<Steps>
+  <Step title="8mm - Ultra-Wide Perspective">
+    **Technical Prompt:** `"ultra-wide perspective"`
+
+    **Field of View:** Extreme (180°+)
+
+    **Characteristics:**
+    - Dramatic distortion
+    - Exaggerated depth
+    - Curved lines at edges
+    - Fish-eye effect
+
+    **Use Cases:**
+    - Action sequences (GoPro-style)
+    - Skateboarding/sports
+    - Immersive POV shots
+    - Extreme establishing shots
+
+    **Emotional Impact:** Energetic, intense, immersive
+  </Step>
+
+  <Step title="14mm - Wide-Angle Perspective">
+    **Technical Prompt:** `"wide-angle perspective"`
+
+    **Field of View:** Very Wide (~114°)
+
+    **Characteristics:**
+    - Expansive frame
+    - Slight distortion
+    - Enhanced depth perception
+    - Dramatic foreground
+
+    **Use Cases:**
+    - Landscapes
+    - Architecture
+    - Group shots
+    - Environmental portraits
+
+    **Emotional Impact:** Grand, epic, spacious
+  </Step>
+
+  <Step title="24mm - Wide-Angle Dynamic Perspective">
+    **Technical Prompt:** `"wide-angle dynamic perspective"`
+
+    **Field of View:** Wide (~84°)
+
+    **Characteristics:**
+    - Balanced distortion
+    - Natural-looking wide shots
+    - Good depth
+    - Minimal edge warping
+
+    **Use Cases:**
+    - Cinematic establishing shots
+    - Street photography
+    - Environmental storytelling
+    - Documentaries
+
+    **Emotional Impact:** Dynamic, engaging, cinematic
+
+    **Popular Choice:** Most common wide-angle for films
+  </Step>
+
+  <Step title="35mm - Natural Cinematic Perspective">
+    **Technical Prompt:** `"natural cinematic perspective"`
+
+    **Field of View:** Normal (~63°)
+
+    **Characteristics:**
+    - Matches human eye perception
+    - Minimal distortion
+    - Natural proportions
+    - Versatile composition
+
+    **Use Cases:**
+    - General cinematography
+    - Medium shots
+    - Natural-looking scenes
+    - All-purpose storytelling
+
+    **Emotional Impact:** Neutral, comfortable, immersive
+
+    **Popular Choice:** Default choice for many filmmakers
+  </Step>
+
+  <Step title="50mm - Standard Portrait Perspective">
+    **Technical Prompt:** `"standard portrait perspective"`
+
+    **Field of View:** Normal (~47°)
+
+    **Characteristics:**
+    - True-to-life perspective
+    - No distortion
+    - Natural depth compression
+    - Flattering proportions
+
+    **Use Cases:**
+    - Portraits
+    - Close-ups
+    - Product photography
+    - Natural-looking scenes
+
+    **Emotional Impact:** Intimate, honest, direct
+
+    **Popular Choice:** "Nifty fifty" - portrait standard
+  </Step>
+
+  <Step title="85mm - Classic Portrait Perspective">
+    **Technical Prompt:** `"classic portrait perspective"`
+
+    **Field of View:** Narrow (~28°)
+
+    **Characteristics:**
+    - Flattering compression
+    - Shallow depth of field
+    - Isolated subjects
+    - Creamy bokeh
+
+    **Use Cases:**
+    - Headshots
+    - Beauty portraits
+    - Product close-ups
+    - Emotional close-ups
+
+    **Emotional Impact:** Intimate, focused, dramatic
+
+    **Popular Choice:** Professional portrait lens
+  </Step>
+</Steps>
+
+<Info>
+**Focal Length Selection Matrix:**
+
+| Focal Length | Best For | Avoid For |
+|--------------|----------|----------|
+| 8mm | Action, POV | Portraits (distorts faces) |
+| 14mm | Landscapes, Architecture | Close-ups |
+| 24mm | Establishing, Environmental | Tight portraits |
+| 35mm | General, Medium shots | Extreme close-ups |
+| 50mm | Portraits, Natural look | Landscapes (limited FOV) |
+| 85mm | Headshots, Beauty | Group shots, Architecture |
+</Info>
+
+## Aperture and Depth of Field
+
+Aperture controls depth of field and bokeh quality. Cinema Studio offers 3 apertures:
+
+<Tabs>
+  <Tab title="f/1.4 - Wide Open">
+    **Technical Prompt:** `"shallow depth of field, creamy bokeh"`
+
+    ### Characteristics
+    - **Depth of Field:** Extremely shallow
+    - **Bokeh:** Smooth, creamy, out-of-focus backgrounds
+    - **Light Gathering:** Maximum (best for low light)
+    - **Subject Isolation:** Strong
+
+    ### Visual Effects
+    - Blurred backgrounds
+    - Soft, dreamy quality
+    - Pronounced subject separation
+    - Large, smooth bokeh circles
+
+    ### Use Cases
+    - Portraits (dramatic subject isolation)
+    - Low-light scenes
+    - Cinematic close-ups
+    - Romantic/dreamy moods
+    - Product photography
+
+    ### Emotional Impact
+    Intimate, focused, dreamlike, professional
+
+    ### Technical Note
+    **Bokeh Shape:** Circular, smooth ("creamy bokeh" from prompt)
+
+    <Tip>
+    **Pro Tip:** Combine f/1.4 with 50mm or 85mm focal length for maximum subject isolation and beautiful bokeh.
+    </Tip>
+  </Tab>
+
+  <Tab title="f/4 - Balanced">
+    **Technical Prompt:** `"balanced depth of field"`
+
+    ### Characteristics
+    - **Depth of Field:** Moderate
+    - **Bokeh:** Present but less pronounced
+    - **Sharpness:** Excellent across frame
+    - **Subject + Context:** Both visible
+
+    ### Visual Effects
+    - Subject sharp, background soft but recognizable
+    - Balanced composition
+    - Good edge-to-edge sharpness
+    - Natural-looking depth
+
+    ### Use Cases
+    - Environmental portraits
+    - Street photography
+    - Travel photography
+    - Cinematic medium shots
+    - Group shots (2-3 people)
+
+    ### Emotional Impact
+    Natural, balanced, storytelling, context-aware
+
+    ### Technical Note
+    **Sweet Spot:** Many lenses perform best at f/4 (sharpest with good bokeh)
+
+    <Info>
+    **Versatility:** f/4 is the most versatile aperture - sharp subject with visible but blurred background context.
+    </Info>
+  </Tab>
+
+  <Tab title="f/11 - Deep Focus">
+    **Technical Prompt:** `"deep focus clarity, sharp foreground to background"`
+
+    ### Characteristics
+    - **Depth of Field:** Very deep
+    - **Bokeh:** Minimal/none
+    - **Sharpness:** Entire scene in focus
+    - **Detail:** Maximum throughout frame
+
+    ### Visual Effects
+    - Foreground to background sharp
+    - Maximum detail everywhere
+    - No bokeh/blur
+    - Landscape-style clarity
+
+    ### Use Cases
+    - Landscapes
+    - Architecture
+    - Group shots (large groups)
+    - Establishing shots
+    - Documentary/journalistic work
+    - Technical/product photography
+
+    ### Emotional Impact
+    Epic, grand, detail-oriented, observational
+
+    ### Technical Note
+    **Diffraction Limit:** f/11 balances deep DOF with diffraction (going beyond f/11 reduces sharpness)
+
+    <Warning>
+    **Avoid for Portraits:** f/11 creates busy, distracting backgrounds. Use f/1.4 or f/4 instead.
+    </Warning>
+  </Tab>
+</Tabs>
+
+### Depth of Field Visualization
+
+```
+f/1.4:  [Background Blur] ■■■ [Sharp Subject] ■■■ [Background Blur]
+        ░░░░░░░░░░░░░░░░░█████████████░░░░░░░░░░░░░░░░░
+
+f/4:    [Soft Background] ■■■■■ [Sharp Subject] ■■■■■ [Soft Background]
+        ░░░░░░░░░████████████████████████░░░░░░░░░
+
+f/11:   [Sharp] ■■■■■■■■■■■ [All Sharp] ■■■■■■■■■■■
+        ██████████████████████████████████████████
+```
+
+## Combining Controls for Specific Looks
+
+### Classic Hollywood Portrait
+
+```yaml
+Camera: Full-Frame Cine Digital
+Lens: Warm Cinema Prime
+Focal Length: 85mm
+Aperture: f/1.4
+
+Result: Flattering, warm, shallow DOF, creamy bokeh
+```
+
+### Epic Sci-Fi Landscape
+
+```yaml
+Camera: Modular 8K Digital
+Lens: Classic Anamorphic
+Focal Length: 24mm
+Aperture: f/11
+
+Result: Sharp, wide, cinematic flares, deep focus
+```
+
+### Indie Film Aesthetic
+
+```yaml
+Camera: Classic 16mm Film
+Lens: Vintage Prime
+Focal Length: 35mm
+Aperture: f/4
+
+Result: Grainy, nostalgic, natural perspective, balanced depth
+```
+
+### High-End Commercial
+
+```yaml
+Camera: Premium Large Format Digital
+Lens: Premium Modern Prime
+Focal Length: 50mm
+Aperture: f/1.4
+
+Result: Ultra-sharp subject, luxurious bokeh, clean modern look
+```
+
+### Retro 70s Film
+
+```yaml
+Camera: Grand Format 70mm Film
+Lens: 70s Cinema Prime
+Focal Length: 35mm
+Aperture: f/4
+
+Result: Warm, organic grain, vintage colors, classic film feel
+```
+
+### Extreme Macro Product Shot
+
+```yaml
+Camera: Studio Digital S35
+Lens: Extreme Macro
+Focal Length: 50mm (macro)
+Aperture: f/4
+
+Result: Ultra-detailed, magnified textures, balanced sharpness
+```
+
+## Real Implementation Details
+
+From `CameraControls.js:2-48`, the component loads these mappings:
+
+```javascript
+// From src/lib/promptUtils.js
+export const CAMERA_MAP = {
+    "Modular 8K Digital": "modular 8K digital cinema camera",
+    "Full-Frame Cine Digital": "full-frame digital cinema camera",
+    "Grand Format 70mm Film": "grand format 70mm film camera",
+    "Studio Digital S35": "Super 35 studio digital camera",
+    "Classic 16mm Film": "classic 16mm film camera",
+    "Premium Large Format Digital": "premium large-format digital cinema camera"
+};
+
+export const LENS_MAP = {
+    "Creative Tilt Lens": "creative tilt lens effect",
+    "Compact Anamorphic": "compact anamorphic lens",
+    "Extreme Macro": "extreme macro lens",
+    "70s Cinema Prime": "1970s cinema prime lens",
+    "Classic Anamorphic": "classic anamorphic lens",
+    "Premium Modern Prime": "premium modern prime lens",
+    "Warm Cinema Prime": "warm-toned cinema prime lens",
+    "Swirl Bokeh Portrait": "swirl bokeh portrait lens",
+    "Vintage Prime": "vintage prime lens",
+    "Halation Diffusion": "halation diffusion filter",
+    "Clinical Sharp Prime": "ultra-sharp clinical prime lens"
+};
+
+export const FOCAL_PERSPECTIVE = {
+    8: "ultra-wide perspective",
+    14: "wide-angle perspective",
+    24: "wide-angle dynamic perspective",
+    35: "natural cinematic perspective",
+    50: "standard portrait perspective",
+    85: "classic portrait perspective"
+};
+
+export const APERTURE_EFFECT = {
+    "f/1.4": "shallow depth of field, creamy bokeh",
+    "f/4": "balanced depth of field",
+    "f/11": "deep focus clarity, sharp foreground to background"
+};
+```
+
+### Default Settings
+
+From `CameraControls.js:38-43`:
+
+```javascript
+let state = {
+    camera: 'Modular 8K Digital',
+    lens: 'Creative Tilt Lens',
+    focal: 35,  // mm
+    aperture: "f/1.4"
+};
+```
+
+## UI Interaction Details
+
+The Cinema Studio interface uses scrollable wheels for control selection:
+
+- **Drag to scroll** through options
+- **Click item** to jump directly
+- **Active item** highlighted with primary color and scale effect
+- **Smooth animations** for professional feel
+
+From `CameraControls.js:78-110`, the component implements touch-friendly drag scrolling:
+
+```javascript
+list.addEventListener('mousedown', (e) => {
+    isDown = true;
+    startY = e.pageY - list.offsetTop;
+    scrollTop = list.scrollTop;
+});
+
+list.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    const y = e.pageY - list.offsetTop;
+    const walk = (y - startY) * 1.5; // Scroll speed multiplier
+    list.scrollTop = scrollTop - walk;
+});
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Start with Focal Length">
+    Choose focal length based on your subject:
+    - Wide (8-24mm) for environments
+    - Normal (35-50mm) for natural looks
+    - Telephoto (85mm) for portraits
+  </Step>
+
+  <Step title="Select Camera Format">
+    Match camera to desired aesthetic:
+    - Film cameras for organic/vintage
+    - Digital cameras for clean/modern
+    - Large format for luxury/bokeh
+  </Step>
+
+  <Step title="Choose Lens Character">
+    Pick lens based on mood:
+    - Modern primes for commercial
+    - Vintage/warm for nostalgic
+    - Anamorphic for epic/sci-fi
+  </Step>
+
+  <Step title="Set Aperture for Depth">
+    Control focus:
+    - f/1.4 for isolation/bokeh
+    - f/4 for balance
+    - f/11 for sharpness throughout
+  </Step>
+
+  <Step title="Iterate and Refine">
+    Generate multiple variations:
+    - Test different focal lengths
+    - Compare aperture settings
+    - Mix camera/lens combinations
+  </Step>
+</Steps>
+
+<Tip>
+**Pro Workflow:** Start with defaults (35mm, f/1.4, Full-Frame Cine, Premium Modern Prime), generate, then adjust one parameter at a time to see its effect.
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Model Selection" icon="images" href="/guides/model-selection">
+    Explore Nano Banana and Nano Banana Pro
+  </Card>
+  <Card title="API Configuration" icon="key" href="/guides/api-configuration">
+    Set up your Muapi.ai API key
+  </Card>
+</CardGroup>

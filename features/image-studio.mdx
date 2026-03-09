@@ -1,0 +1,327 @@
+---
+title: 'Image Studio'
+description: 'Transform your ideas into stunning images with AI-powered text-to-image and image-to-image generation'
+icon: 'image'
+---
+
+The **Image Studio** is a dual-mode AI image generation workspace that automatically switches between text-to-image (T2I) and image-to-image (I2I) workflows based on whether you've uploaded a reference image.
+
+## Dual Mode Intelligence
+
+Image Studio features smart mode switching that adapts the entire interface based on your workflow:
+
+<CardGroup cols={2}>
+  <Card title="Text-to-Image Mode" icon="wand-magic-sparkles">
+    Generate images from scratch using text descriptions. Access 50+ models including Flux, Nano Banana 2, Seedream 5.0, and Midjourney.
+  </Card>
+  <Card title="Image-to-Image Mode" icon="images">
+    Transform existing images with AI. Upload a reference image to automatically switch to 55+ editing models like Kontext, Seedream Edit, and Upscaler.
+  </Card>
+</CardGroup>
+
+### How Mode Switching Works
+
+1. **Start in T2I Mode** — The studio defaults to text-to-image generation with 50+ creative models
+2. **Upload triggers I2I Mode** — Click the upload button and select an image to automatically switch to image-to-image models
+3. **Clear returns to T2I** — Remove the reference image to return to text-to-image mode
+
+The model selector, aspect ratio options, and quality controls all update automatically when you switch modes.
+
+## Generating Images from Text
+
+<Steps>
+  <Step title="Enter Your Prompt">
+    Click into the prompt textarea and describe the image you want to create. The prompt is **required** for text-to-image generation.
+    
+    ```
+    Example: "A futuristic cityscape at sunset with flying cars and neon signs"
+    ```
+  </Step>
+  
+  <Step title="Select Your Model">
+    Click the model button to browse 50+ text-to-image models:
+    
+    - **Nano Banana 2** — Google Gemini-powered, supports 1K/2K/4K resolution
+    - **Flux Dev** — High-quality open model with fine detail
+    - **Seedream 5.0** — ByteDance model with quality presets (basic/high)
+    - **Ideogram v3** — Excellent typography and composition
+    - **Midjourney v7** — Professional creative generation
+    - **GPT-4o** — OpenAI's image generation model
+    
+    Use the search bar to quickly find models by name.
+  </Step>
+  
+  <Step title="Choose Aspect Ratio">
+    Select from available aspect ratios (varies by model):
+    
+    - `1:1` — Square (Instagram, profile pictures)
+    - `16:9` — Landscape (desktop wallpapers, YouTube thumbnails)
+    - `9:16` — Portrait (mobile wallpapers, stories)
+    - `4:3`, `3:4`, `21:9` — Additional formats
+    
+    The aspect ratio dropdown automatically shows only formats supported by your selected model.
+  </Step>
+  
+  <Step title="Set Quality/Resolution (Optional)">
+    For models that support quality or resolution settings, a quality button appears:
+    
+    - **Nano Banana 2**: Choose `1K`, `2K`, or `4K`
+    - **Seedream 5.0**: Select `basic` or `high` quality
+    - **Other models**: Resolution or quality presets as available
+    
+    <Info>The quality button only appears for models that support these settings. Most models use fixed output quality.</Info>
+  </Step>
+  
+  <Step title="Generate">
+    Click the **Generate ✨** button to start. The interface will:
+    
+    - Hide the hero section
+    - Show a loading spinner
+    - Poll the API until generation completes
+    - Display your result in the canvas area
+  </Step>
+</Steps>
+
+## Image-to-Image Transformations
+
+<Steps>
+  <Step title="Upload a Reference Image">
+    Click the **upload button** (📤 icon on the left of the prompt bar) to open the reference image picker. You can:
+    
+    - **Select from upload history** — Click any previously uploaded image
+    - **Upload a new image** — Click "Upload new" and choose a file from your device
+    
+    Once you select an image, the studio automatically switches to I2I mode.
+  </Step>
+  
+  <Step title="Studio Switches to I2I Mode">
+    When you upload an image, the studio automatically:
+    
+    - Switches to 55+ image-to-image models
+    - Updates the prompt placeholder to "Describe how to transform this image (optional)"
+    - Shows quality/resolution controls for compatible I2I models
+    - Enables multi-image support if you select a compatible model
+  </Step>
+  
+  <Step title="Enter Transformation Prompt (Optional)">
+    For image-to-image generation, the prompt is **optional**. Many models can interpret the reference image without text:
+    
+    ```
+    Example: "Make this photo look like a watercolor painting"
+    Example: "Remove the background"
+    Example: "Upscale to 4K resolution"
+    ```
+    
+    Leave the prompt empty to let the model decide how to transform the image.
+  </Step>
+  
+  <Step title="Select I2I Model">
+    Browse 55+ image-to-image models:
+    
+    - **Nano Banana 2 Edit** — Supports up to 14 reference images, 1K/2K/4K output
+    - **Flux Kontext Pro** — High-quality image editing
+    - **Seedream 5.0 Edit** — Natural language style transfer
+    - **Seededit v3** — Precise editing control
+    - **Upscaler** — Resolution enhancement
+    - **Background Remover** — Clean background removal
+  </Step>
+  
+  <Step title="Generate Transformation">
+    Click **Generate ✨** to start the transformation. The API will:
+    
+    - Upload your reference image (if not already uploaded)
+    - Send the image URL and optional prompt to the model
+    - Return the transformed result
+  </Step>
+</Steps>
+
+## Supported Models
+
+### Text-to-Image Models (50+)
+
+<Tabs>
+  <Tab title="Flagship Models">
+    | Model | Key Features |
+    | --- | --- |
+    | **Nano Banana 2** | Google Gemini 3.1 Flash · 1K/2K/4K resolution · Google Search enhancement · aspect ratio `auto` |
+    | **Flux Dev** | High-quality open model · 128-2048px (divisible by 64) · Fine detail |
+    | **Seedream 5.0** | ByteDance · Quality basic/high · 8 aspect ratios · up to 4K |
+    | **Ideogram v3** | Excellent typography · Precise composition · Text rendering |
+    | **Midjourney v7** | Professional creative generation · Artistic styles |
+    | **GPT-4o** | OpenAI's image generation · Natural language understanding |
+  </Tab>
+  
+  <Tab title="Additional Models">
+    - **Flux Dev Lora** — Custom LoRA support
+    - **SDXL** — Stable Diffusion XL base
+    - **Playground v3** — Creative playground model
+    - **Recraft v3** — Vector-style generation
+    - **Wan 2.5/2.6** — Chinese model with quality presets
+    - **Veo 3** — Google's video-to-image model
+    - **Sora 2** — OpenAI's image generation
+    - And 40+ more models...
+  </Tab>
+</Tabs>
+
+### Image-to-Image Models (55+)
+
+<Tabs>
+  <Tab title="Editing Models">
+    | Model | Max Images | Key Features |
+    | --- | --- | --- |
+    | **Nano Banana 2 Edit** | 14 | Google Gemini · 1K/2K/4K · Multi-image support |
+    | **Flux Kontext Dev I2I** | 10 | High-quality context-aware editing |
+    | **Seedream 5.0 Edit** | 1 | ByteDance · Natural language style transfer · Quality basic/high |
+    | **GPT-4o Edit** | 10 | OpenAI's image editing model |
+    | **Kling O1 Edit Image** | 10 | Kuaishou's editing model |
+  </Tab>
+  
+  <Tab title="Utility Models">
+    - **Upscaler** — Resolution enhancement (2x, 4x)
+    - **Background Remover** — Clean background removal
+    - **Seededit v3/v4/v4.5** — Precise editing control
+    - **Flux 2 Flex/Pro Edit** — Up to 8 images
+    - **Nano Banana Pro Edit** — 8 image support
+    - **Wan 2.5/2.6 Image Edit** — 2-3 images
+    - **Qwen Image Edit Plus** — 3 images
+    - And 40+ more models...
+  </Tab>
+</Tabs>
+
+## Quality and Resolution Controls
+
+When you select a model that supports quality or resolution settings, a **quality button** appears in the control bar.
+
+### Resolution Presets
+
+Models like **Nano Banana 2** offer resolution presets:
+
+- **1K** — 1024px output (fast, lower cost)
+- **2K** — 2048px output (balanced quality/speed)
+- **4K** — 4096px output (highest detail, slower)
+
+### Quality Presets
+
+Models like **Seedream 5.0** offer quality levels:
+
+- **basic** — Faster generation, lower detail
+- **high** — Slower generation, enhanced detail
+
+<Note>
+The quality/resolution button is **hidden by default** and only appears when you select a compatible model. This keeps the interface clean and focused.
+</Note>
+
+## Canvas & Generation History
+
+When your generation completes, the Image Studio transitions to the **canvas view**:
+
+<CardGroup cols={2}>
+  <Card title="Result Display" icon="image">
+    Your generated image appears in the center with a glassmorphism border and interactive glow effect.
+  </Card>
+  <Card title="Action Buttons" icon="sliders">
+    - **↻ Regenerate** — Run the same generation again
+    - **↓ Download** — Save image as JPEG
+    - **+ New** — Return to prompt bar for a new generation
+  </Card>
+</CardGroup>
+
+### History Sidebar
+
+All generations are saved to a **history sidebar** on the right side of the screen:
+
+- **Persistent storage** — Up to 50 generations saved in browser localStorage
+- **Thumbnail previews** — Quick visual reference of past generations
+- **Click to load** — Click any thumbnail to view full resolution
+- **Download from history** — Hover over thumbnails to download past generations
+
+<Info>
+The history sidebar automatically appears after your first generation and persists across browser sessions.
+</Info>
+
+## Multi-Image Input
+
+Some image-to-image models support **multiple reference images** (see [Multi-Image Input](/features/multi-image-input) for details).
+
+When you select a multi-image model like **Nano Banana 2 Edit**, the upload picker switches to **multi-select mode**:
+
+1. Click the upload button
+2. Select multiple images (checkboxes appear with order numbers)
+3. Click **"Use Selected"** to confirm
+4. The trigger button shows a count badge (`2`, `3`, etc.)
+
+<Warning>
+Images are sent to the model in the order you select them. The order can affect the result for some models.
+</Warning>
+
+## Keyboard Shortcuts
+
+- **Enter** (in textarea) — Generate image
+- **Escape** — Close dropdowns and panels
+- **Tab** — Navigate between controls
+
+## Tips for Best Results
+
+<AccordionGroup>
+  <Accordion title="Writing Effective Prompts">
+    - **Be specific** — "A red sports car on a mountain road at sunset" is better than "a car"
+    - **Include style keywords** — "photorealistic", "oil painting", "minimalist", "cinematic"
+    - **Add detail** — Lighting, composition, mood, colors, textures
+    - **Use commas** — Separate concepts for clarity
+  </Accordion>
+  
+  <Accordion title="Choosing the Right Model">
+    - **Nano Banana 2** — Best for Google Search-enhanced generation and high resolution
+    - **Flux Dev** — Best for fine detail and photorealism
+    - **Seedream 5.0** — Best for fast generation with quality presets
+    - **Ideogram v3** — Best when you need text in the image
+    - **Midjourney v7** — Best for artistic and creative results
+  </Accordion>
+  
+  <Accordion title="Image-to-Image Best Practices">
+    - **Upload high-quality references** — Better input = better output
+    - **Use descriptive prompts** — Even optional prompts help guide the transformation
+    - **Try different models** — Each model interprets images differently
+    - **Experiment with quality settings** — "high" quality costs more but produces better results
+  </Accordion>
+</AccordionGroup>
+
+## API Integration
+
+Under the hood, Image Studio uses the [Muapi.ai](https://muapi.ai) unified API:
+
+```javascript
+// Text-to-Image generation
+const result = await muapi.generateImage({
+  model: 'nano-banana',
+  prompt: 'A futuristic cityscape',
+  aspect_ratio: '16:9',
+  resolution: '2k'
+});
+
+// Image-to-Image generation
+const result = await muapi.generateI2I({
+  model: 'nano-banana-edit',
+  image_url: 'https://...',
+  images_list: ['https://...'], // for multi-image models
+  prompt: 'Make it look like a painting',
+  aspect_ratio: '1:1',
+  resolution: '2k'
+});
+```
+
+See the [API Reference](/api/muapi-client) for complete documentation.
+
+## Related Features
+
+<CardGroup cols={3}>
+  <Card title="Multi-Image Input" icon="images" href="/features/multi-image-input">
+    Learn how to use multiple reference images
+  </Card>
+  <Card title="Upload History" icon="clock-rotate-left" href="/features/upload-history">
+    Reuse previously uploaded images
+  </Card>
+  <Card title="Generation History" icon="timeline" href="/features/generation-history">
+    Browse and download past generations
+  </Card>
+</CardGroup>

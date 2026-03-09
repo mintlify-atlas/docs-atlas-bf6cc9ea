@@ -1,0 +1,404 @@
+---
+title: 'Image-to-Video Models'
+description: 'Animate images into videos using 60+ specialized models'
+icon: 'film'
+---
+
+## Overview
+
+The Image-to-Video API provides access to 60+ models that animate static images into dynamic videos. These models automatically activate when you upload a start frame image in the Video Studio.
+
+<Note>
+Image-to-video models support single or **multi-image input** (up to 9 images for some models) for character consistency and scene composition.
+</Note>
+
+## Model Categories
+
+<AccordionGroup>
+  <Accordion title="Multi-Image Animation Models" icon="layer-group">
+    Advanced models that accept multiple reference images for consistent character animation.
+    
+    - **Seedance 2.0 I2V** — Up to 9 images, 5s/10s/15s duration
+    - **Openai Sora 2 / 2 Pro I2V** — Multiple images with audio support
+    - **Pixverse v4.5 / v5 I2V** — Multi-image with 5s/8s options
+    - **Vidu v2.0 I2V** — Multiple images for 4s mobile videos
+    - **Vidu Q1 Reference** — Multi-image character animation
+    - **Seedance Lite Reference Video** — Multi-image reference-to-video
+    - **Wan2.1 Reference Video** — Product and object animation
+  </Accordion>
+
+  <Accordion title="High-Quality Animation Models" icon="crown">
+    Premium models for photorealistic and cinematic animation.
+    
+    - **Kling v2.1 Master/Pro I2V** — 5s/10s photorealistic motion
+    - **Kling v2.5/2.6 Pro I2V** — Enhanced character animation
+    - **Veo3 / Veo3 Fast I2V** — Google's image-to-video models
+    - **Veo3.1 / Veo3.1 Fast I2V** — 8s 1080p animation
+    - **Runway Act Two I2V** — Professional cinematic effects
+    - **Leonardo AI Motion 2.0** — Slow-motion and dynamic effects
+  </Accordion>
+
+  <Accordion title="Seedance Animation Models" icon="seedling">
+    ByteDance's animation models with quality and resolution controls.
+    
+    - **Seedance Lite I2V** — Fast 3–12s generation
+    - **Seedance Pro I2V** — High-quality cinematic animation
+    - **Seedance 2.0 I2V** — Latest with 15s support and multi-image
+    - **Seedance Lite Reference Video** — Multi-image product animation
+  </Accordion>
+
+  <Accordion title="Wan Animation Models" icon="wand-magic-sparkles">
+    Realistic character and portrait animation.
+    
+    - **Wan2.2 I2V** — 5s/8s portrait animation
+    - **Wan2.5 I2V / I2V Fast** — Enhanced motion quality
+    - **Wan2.6 I2V** — Multi-duration support (5s/10s/15s)
+    - **Wan2.1 Reference Video** — Multi-image product shots
+  </Accordion>
+
+  <Accordion title="Specialized Animation Models" icon="sparkles">
+    Domain-specific and effect-based animation tools.
+    
+    - **Minimax Hailuo 02 Standard/Pro I2V** — 6s/10s animation
+    - **OVI I2V** — Creative experimental animation
+    - **Higgsfield Dop I2V** — 100+ motion presets (Bullet Time, Dolly, etc.)
+    - **Video Effects** — 40+ animated effects (Flying, Melt, Minecraft, etc.)
+  </Accordion>
+</AccordionGroup>
+
+## Popular Models
+
+| Model | Max Images | Duration | Resolution | Best For |
+|-------|-----------|---------|-----------|----------|
+| **Seedance 2.0 I2V** | 9 | 5s / 10s / 15s | Basic/High | Multi-image character consistency |
+| **Kling v2.6 Pro I2V** | 1 | 5s / 10s | Variable | Photorealistic single-image animation |
+| **Veo3.1 I2V** | 1 | 8s | 1080p | Google-grade quality |
+| **Sora 2 Pro I2V** | Multiple | 10s / 15s / 25s | 720p/1080p | Long-form storytelling with audio |
+| **Runway Act Two I2V** | 1 | Variable | Variable | Professional cinematic effects |
+| **Pixverse v5 I2V** | Multiple | 5s / 8s | 360p–1080p | Flexible multi-image animation |
+| **Wan2.6 I2V** | 1 | 5s / 10s / 15s | Variable | Portrait and character animation |
+
+## Newly Added Models
+
+<Tip>
+These models were recently added and offer advanced animation capabilities.
+</Tip>
+
+### Seedance 2.0 I2V
+
+**Family:** ByteDance  
+**Max Images:** 9  
+**Duration:** 5s / 10s / 15s  
+**Quality:** Basic / High  
+**Aspect Ratios:** 16:9, 9:16, 4:3, 3:4
+
+<Accordion title="Features">
+- Animate up to 9 reference images for character consistency
+- Quality presets for speed vs. fidelity tradeoff
+- Natural motion and physics simulation
+- Wide aspect ratio support
+- Seamless multi-image blending
+</Accordion>
+
+```json Example Request
+{
+  "model": "seedance-v2.0-i2v",
+  "images_list": [
+    "https://example.com/character.jpg"
+  ],
+  "prompt": "The character walks forward, turns to face the camera, and waves. Smooth natural motion, cinematic lighting.",
+  "aspect_ratio": "16:9",
+  "duration": 10,
+  "quality": "high"
+}
+```
+
+<Note>
+Seedance 2.0 I2V can accept up to 9 images to maintain character consistency across complex animations.
+</Note>
+
+## Multi-Image Animation
+
+<Note>
+Models with multi-image support maintain character appearance and style consistency across the animation.
+</Note>
+
+### Multi-Image Model Support
+
+| Model | Max Images | Use Case |
+|-------|-----------|----------|
+| Seedance 2.0 I2V | 9 | Character consistency across motion |
+| Seedance Lite Reference Video | Multiple | Product and object animation |
+| Openai Sora 2 / 2 Pro I2V | Multiple | Narrative with character consistency |
+| Pixverse v4.5 / v5 I2V | Multiple | Flexible multi-reference animation |
+| Vidu v2.0 I2V | Multiple | Mobile-optimized character animation |
+| Vidu Q1 Reference | Multiple | Cinematic character scenes |
+| Wan2.1 Reference Video | Multiple | Product showcase animation |
+
+### Example: Multi-Image Animation Request
+
+```json
+{
+  "model": "seedance-v2.0-i2v",
+  "images_list": [
+    "https://example.com/character-front.jpg",
+    "https://example.com/character-side.jpg",
+    "https://example.com/character-back.jpg"
+  ],
+  "prompt": "The character walks in a circle, showcasing all angles. Smooth rotation, consistent lighting, natural movement.",
+  "aspect_ratio": "16:9",
+  "duration": 10,
+  "quality": "high"
+}
+```
+
+## Common Input Parameters
+
+### Image URL / Images List
+
+**Type:** `string` (single) or `array` (multi-image)  
+**Required:** Yes  
+**Format:** Publicly accessible HTTPS URL or Muapi uploaded file URL
+
+For single-image models, use `image_url`. For multi-image models, use `images_list` array.
+
+<Tip>
+Use the [Upload File](/api/upload) endpoint to host your images on Muapi infrastructure before sending them to models.
+</Tip>
+
+### Prompt
+
+**Type:** `string`  
+**Required:** Varies by model (optional for some motion preset models)  
+**Max Length:** 500–3000 characters
+
+Describe the desired motion, camera movement, and changes in the scene. Be specific about what should animate and how.
+
+**Example Prompts:**
+
+```text
+Good: "The person waves at the camera."
+
+Better: "The person slowly raises their right hand and waves at the camera with a gentle smile. 
+Soft natural lighting, subtle head movement, camera remains static. Smooth, realistic motion."
+```
+
+### Duration
+
+**Type:** `integer`  
+**Options:** Varies by model (typically 4–25 seconds)
+
+Length of the animated video. Some models have fixed durations (e.g., Vidu v2.0 = 4s), while others offer flexible options.
+
+### Aspect Ratio
+
+**Type:** `string`  
+**Options:** `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `21:9`, etc.
+
+Some models auto-detect from the input image; others require explicit specification.
+
+### Resolution / Quality
+
+- **Resolution:** `480p`, `720p`, `1080p`, `360p`, `540p`
+- **Quality:** `basic`, `medium`, `high`
+
+<Note>
+Higher resolutions and quality settings consume more credits and take longer to generate.
+</Note>
+
+## Model-Specific Features
+
+<AccordionGroup>
+  <Accordion title="Higgsfield Dop I2V — 100+ Motion Presets">
+    
+    Select from curated motion and camera effects:
+    
+    **Camera Movements:**
+    - 360 Orbit, 3D Rotation, Arc Left/Right
+    - Dolly In/Out/Left/Right, Dolly Zoom In/Out
+    - Crane Up/Down/Over The Head
+    - Crash Zoom In/Out, Zoom In/Out
+    
+    **Special Effects:**
+    - Bullet Time, Datamosh, Disintegration
+    - Fire Breathe, Eyes In, Face Punch
+    - Clone Explosion, Building Explosion
+    
+    **Actions:**
+    - Action Run, Baseball Kick, Basketball Dunks
+    - Boxing, Catwalk, Car Chasing
+    
+    ```json
+    {
+      "model": "higgsfield-dop-image-to-video",
+      "image_url": "...",
+      "prompt": "Rotate the camera around the scene.",
+      "motion": "360 Orbit"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Video Effects — 40+ Animated Effects">
+    
+    Apply preset animations without prompts:
+    
+    - Balloon Flyaway, Blow Kiss, Body Shake
+    - Break Glass, Carry Me, Cartoon Doll
+    - Flying, Gender Swap, Hair Swap
+    - Minecraft, Pixel Me, Soul Depart
+    - Zoom In Fast, Zoom Out
+    
+    ```json
+    {
+      "model": "video-effects",
+      "image_url": "...",
+      "name": "Flying"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Seedance Models — Camera Fixed Option">
+    
+    **Camera Fixed:** `true` | `false`  
+    
+    When enabled, locks the camera position and animates only the subject/scene.
+    
+    ```json
+    {
+      "model": "seedance-lite-i2v",
+      "image_url": "...",
+      "prompt": "The character waves at the camera.",
+      "duration": 5,
+      "camera_fixed": true
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="OVI I2V — Audio Captioning">
+    
+    Supports audio description in prompts:
+    
+    ```text
+    Camera: static medium shot. The scientist speaks: <S>We have discovered life beyond Earth.<E> 
+    <AUDCAP>Soft electronic hum, distant beep of instruments<ENDAUDCAP>
+    ```
+    
+    Use `<S>...<E>` for speech and `<AUDCAP>...<ENDAUDCAP>` for ambient audio.
+  </Accordion>
+</AccordionGroup>
+
+## Example Use Cases
+
+<AccordionGroup>
+  <Accordion title="Portrait Animation">
+    ```json
+    {
+      "model": "wan2.6-i2v",
+      "image_url": "https://example.com/portrait.jpg",
+      "prompt": "The person slowly turns their head to the right, makes eye contact with the camera, and smiles gently. Soft natural lighting, subtle facial expressions, realistic motion.",
+      "duration": 5
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Product Showcase">
+    ```json
+    {
+      "model": "wan2.1-reference-video",
+      "images_list": [
+        "https://example.com/product-angle1.jpg",
+        "https://example.com/product-angle2.jpg"
+      ],
+      "prompt": "The product rotates 360 degrees on a reflective surface, studio lighting highlighting its features.",
+      "aspect_ratio": "16:9",
+      "duration": 5,
+      "resolution": "720p"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Character Consistency Animation">
+    ```json
+    {
+      "model": "seedance-v2.0-i2v",
+      "images_list": [
+        "https://example.com/char-front.jpg",
+        "https://example.com/char-side.jpg"
+      ],
+      "prompt": "The character walks forward, stops, and looks around. Camera follows with a slow tracking shot. Natural movement, consistent lighting.",
+      "aspect_ratio": "16:9",
+      "duration": 10,
+      "quality": "high"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Cinematic Effect">
+    ```json
+    {
+      "model": "higgsfield-dop-image-to-video",
+      "image_url": "https://example.com/scene.jpg",
+      "prompt": "Cinematic bullet time effect around the character.",
+      "motion": "Bullet Time"
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Duration & Resolution Guide
+
+| Use Case | Recommended Duration | Resolution | Models |
+|----------|---------------------|-----------|--------|
+| Social media clips | 4–8s | 720p–1080p | Wan 2.6, Kling v2.6 Pro, Seedance 2.0 |
+| YouTube shorts | 10–15s | 1080p | Sora 2 Pro, Seedance 2.0, Wan 2.6 |
+| Product demos | 5–8s | 1080p | Runway Act Two, Veo 3.1, Kling v2.6 Pro |
+| Character animation | 10–15s | 720p–1080p | Seedance 2.0 I2V, Sora 2 Pro |
+| Quick effects | 4–6s | 720p | Video Effects, Higgsfield Dop |
+
+## API Endpoints
+
+All image-to-video models use the unified endpoint pattern:
+
+```bash
+POST /api/v1/{model-endpoint}
+```
+
+Refer to the [Generate Image-to-Video](/api/generate/image-to-video) guide for integration details.
+
+## Model Selection Tips
+
+<Tip>
+**For character consistency:** Use Seedance 2.0 I2V (9 images) or Pixverse v5 I2V (multi-image).
+
+**For portrait animation:** Use Wan 2.6, Kling v2.6 Pro, or Minimax Hailuo 02 Pro.
+
+**For cinematic effects:** Use Higgsfield Dop I2V (100+ presets) or Runway Act Two.
+
+**For product animation:** Use Wan2.1 Reference Video or Seedance Lite Reference.
+
+**For long animations:** Use Sora 2 Pro (25s) or Seedance 2.0 I2V (15s).
+
+**For quick effects:** Use Video Effects or Higgsfield Dop with motion presets.
+</Tip>
+
+## Best Practices
+
+1. **Upload First:** Use the [Upload File](/api/upload) endpoint to host images before animating.
+2. **Start Frame Quality:** Use high-quality, well-lit images for best results.
+3. **Be Specific:** Describe motion, camera movement, and what should remain static.
+4. **Test Duration:** Start with 5s generations before committing to longer durations.
+5. **Camera Fixed:** Use `camera_fixed: true` for subject-only animation without camera movement.
+6. **Multi-Image Order:** For multi-image models, sequence matters—order images logically.
+7. **Resolution Trade-offs:** Use 720p for iteration, 1080p for final output.
+
+## Rate Limits
+
+Image-to-video generation consumes more credits than text-to-video through the Muapi.ai API. Cost factors include:
+
+- **Duration:** Longer videos cost more
+- **Resolution:** Higher resolutions cost more
+- **Quality:** High-quality modes cost more
+- **Multi-Image:** Multiple input images may cost more
+- **Model:** Premium models cost more than open-source options
+
+Refer to the [Muapi.ai documentation](https://muapi.ai) for detailed pricing information.

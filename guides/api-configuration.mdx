@@ -1,0 +1,336 @@
+---
+title: API Configuration
+description: Set up and manage your Muapi.ai API key for image and video generation
+---
+
+## Overview
+
+Open Higgsfield AI uses [Muapi.ai](https://muapi.ai) as its API provider for accessing 20+ AI models. This guide walks you through obtaining, configuring, and securing your API key.
+
+## Getting a Muapi.ai API Key
+
+<Steps>
+  <Step title="Create an Account">
+    Visit [https://muapi.ai](https://muapi.ai) and sign up for an account.
+  </Step>
+
+  <Step title="Navigate to API Keys">
+    After logging in, go to your dashboard and locate the API Keys section.
+  </Step>
+
+  <Step title="Generate a New Key">
+    Click "Create API Key" and give it a descriptive name (e.g., "Open Higgsfield AI").
+  </Step>
+
+  <Step title="Copy Your Key">
+    Copy the generated API key immediately—you won't be able to see it again.
+  </Step>
+</Steps>
+
+<Warning>
+Never share your API key publicly or commit it to version control. Treat it like a password.
+</Warning>
+
+## Configuring the API Key in Open Higgsfield AI
+
+### In the App Interface
+
+<Steps>
+  <Step title="Open Settings">
+    Click the **Settings** icon in the application header.
+  </Step>
+
+  <Step title="Enter API Key">
+    Paste your Muapi.ai API key into the "API Key" field.
+  </Step>
+
+  <Step title="Save Settings">
+    Click **Save** to store your API key securely in browser localStorage.
+  </Step>
+
+  <Step title="Test Connection">
+    Generate a test image to verify your API key is working correctly.
+  </Step>
+</Steps>
+
+### Storage Location
+
+The API key is stored locally in your browser using `localStorage`:
+
+```javascript
+// API key storage (from muapi.js:10)
+localStorage.setItem('muapi_key', 'your-api-key-here');
+```
+
+<Info>
+Your API key is stored **only in your browser** and never sent to any server except Muapi.ai when making generation requests.
+</Info>
+
+## How API Integration Works
+
+### API Client Architecture
+
+Open Higgsfield AI uses the `MuapiClient` class to handle all API communication:
+
+```javascript
+// From src/lib/muapi.js
+export class MuapiClient {
+    constructor() {
+        // Development: proxy through Vite
+        // Production: direct to api.muapi.ai
+        this.baseUrl = import.meta.env.DEV ? '' : 'https://api.muapi.ai';
+    }
+
+    getKey() {
+        const key = localStorage.getItem('muapi_key');
+        if (!key) throw new Error('API Key missing. Please set it in Settings.');
+        return key;
+    }
+}
+```
+
+### Request Flow
+
+<Steps>
+  <Step title="User Initiates Generation">
+    You enter a prompt and click "Generate" in Image Studio, Video Studio, or Cinema Studio.
+  </Step>
+
+  <Step title="Client Submits Task">
+    The app sends a POST request to Muapi.ai with your prompt and model parameters:
+
+    ```javascript
+    // From muapi.js:73-80
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': key  // Your API key in header
+        },
+        body: JSON.stringify(finalPayload)
+    });
+    ```
+  </Step>
+
+  <Step title="Task Queued">
+    Muapi.ai returns a `request_id` for tracking:
+
+    ```json
+    {
+      "request_id": "abc123xyz",
+      "status": "processing"
+    }
+    ```
+  </Step>
+
+  <Step title="Polling for Results">
+    The client polls the `/predictions/{request_id}/result` endpoint every 2 seconds:
+
+    ```javascript
+    // From muapi.js:120-166
+    async pollForResult(requestId, key, maxAttempts = 60, interval = 2000) {
+        const pollUrl = `${this.baseUrl}/api/v1/predictions/${requestId}/result`;
+        
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            await new Promise(resolve => setTimeout(resolve, interval));
+            
+            const response = await fetch(pollUrl, {
+                headers: { 'x-api-key': key }
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'completed') {
+                return data;  // Contains image/video URL
+            }
+        }
+    }
+    ```
+  </Step>
+
+  <Step title="Result Delivered">
+    Once complete, the app displays the generated image or video:
+
+    ```json
+    {
+      "status": "completed",
+      "outputs": ["https://cdn.muapi.ai/result.jpg"],
+      "request_id": "abc123xyz"
+    }
+    ```
+  </Step>
+</Steps>
+
+### Timeout Settings
+
+<CodeGroup>
+```javascript Images (2 minutes)
+// From muapi.js:27-111
+await this.pollForResult(requestId, key);
+// maxAttempts: 60 × interval: 2000ms = 120 seconds
+```
+
+```javascript Videos (4 minutes)
+// From muapi.js:168-221
+await this.pollForResult(requestId, key, 120, 2000);
+// maxAttempts: 120 × interval: 2000ms = 240 seconds
+```
+</CodeGroup>
+
+## CORS and Proxy Configuration
+
+During development, Vite proxies API requests to avoid CORS issues:
+
+```javascript
+// From vite.config.js:8-16
+server: {
+    proxy: {
+        '/api': {
+            target: 'https://api.muapi.ai',
+            changeOrigin: true,
+            secure: false
+        }
+    }
+}
+```
+
+<Info>
+**In Development:** Requests go to `http://localhost:5173/api` → proxied to `https://api.muapi.ai`
+
+**In Production:** Requests go directly to `https://api.muapi.ai`
+</Info>
+
+## API Key Security Best Practices
+
+<Warning>
+**Critical Security Rules:**
+
+1. Never commit API keys to Git repositories
+2. Don't share API keys in screenshots or support requests
+3. Rotate keys regularly if exposed
+4. Use separate keys for development and production
+5. Monitor usage on the Muapi.ai dashboard
+</Warning>
+
+### Environment Variables (For Self-Hosting)
+
+If self-hosting, consider using environment variables:
+
+```bash
+# .env.local (never commit this file)
+VITE_MUAPI_KEY=your-api-key-here
+```
+
+```javascript
+// Access in code
+const apiKey = import.meta.env.VITE_MUAPI_KEY;
+```
+
+Add `.env.local` to your `.gitignore`:
+
+```bash
+echo ".env.local" >> .gitignore
+```
+
+## Troubleshooting API Issues
+
+<AccordionGroup>
+  <Accordion title="Error: API Key missing. Please set it in Settings.">
+    **Cause:** No API key found in localStorage.
+
+    **Solution:**
+    1. Open Settings modal
+    2. Enter your Muapi.ai API key
+    3. Click Save
+    4. Refresh the page and try again
+
+    **Code Reference:** `muapi.js:10-13`
+  </Accordion>
+
+  <Accordion title="Error: API Request Failed: 401 Unauthorized">
+    **Cause:** Invalid or expired API key.
+
+    **Solution:**
+    1. Log in to [muapi.ai](https://muapi.ai)
+    2. Verify your key is active
+    3. Generate a new key if necessary
+    4. Update the key in Settings
+
+    **Code Reference:** `muapi.js:82-86`
+  </Accordion>
+
+  <Accordion title="Error: Generation timed out after polling">
+    **Cause:** API took longer than 2-4 minutes to complete.
+
+    **Solution:**
+    - Try a faster model (e.g., Flux Schnell)
+    - Check Muapi.ai status page for outages
+    - Reduce image resolution or video duration
+
+    **Code Reference:** `muapi.js:165`
+  </Accordion>
+
+  <Accordion title="Error: Poll Failed: 429 Rate Limit Exceeded">
+    **Cause:** Too many requests in a short time.
+
+    **Solution:**
+    - Wait 60 seconds before retrying
+    - Check your Muapi.ai plan limits
+    - Reduce concurrent generation requests
+
+    **Code Reference:** `muapi.js:136-143`
+  </Accordion>
+
+  <Accordion title="CORS Error in Browser Console">
+    **Cause:** Production build missing CORS headers (should not happen with proper deployment).
+
+    **Solution:**
+    - In development: Restart Vite dev server
+    - In production: Verify API requests go directly to `api.muapi.ai`
+    - Check browser DevTools Network tab for actual error
+
+    **Code Reference:** `vite.config.js:8-16`
+  </Accordion>
+
+  <Accordion title="Error: File upload failed">
+    **Cause:** Issue uploading reference images for Image-to-Image or Image-to-Video.
+
+    **Solution:**
+    - Check file size (usually < 10MB)
+    - Verify file format (JPG, PNG, WebP)
+    - Ensure stable internet connection
+
+    **Code Reference:** `muapi.js:362-388`
+  </Accordion>
+</AccordionGroup>
+
+## Monitoring API Usage
+
+<Info>
+Track your API usage and costs on the [Muapi.ai Dashboard](https://muapi.ai/dashboard):
+
+- Request history
+- Credit balance
+- Per-model costs
+- Billing details
+</Info>
+
+## API Rate Limits
+
+Muapi.ai enforces rate limits based on your plan:
+
+- **Free Plan:** Lower concurrency, daily credit limit
+- **Pro Plan:** Higher concurrency, pay-as-you-go credits
+
+The client handles rate limit errors automatically by continuing to poll (status code 429 is non-fatal).
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Model Selection" icon="images" href="/guides/model-selection">
+    Choose the right model for your needs
+  </Card>
+  <Card title="Self-Hosting Guide" icon="server" href="/guides/self-hosting">
+    Deploy Open Higgsfield AI to production
+  </Card>
+</CardGroup>

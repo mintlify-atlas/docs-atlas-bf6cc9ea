@@ -1,0 +1,517 @@
+---
+title: 'Generation History'
+description: 'Browse, revisit, and download all past AI-generated images and videos with persistent browser storage'
+icon: 'timeline'
+---
+
+Every image and video you generate in Open Higgsfield AI is automatically saved to **generation history**, stored locally in your browser. This gives you a permanent record of your creative work with the ability to revisit, download, and learn from past generations.
+
+## Overview
+
+Generation history provides:
+
+<CardGroup cols={2}>
+  <Card title="Persistent Storage" icon="database">
+    Up to 50 images (Image Studio) or 30 videos (Video Studio) saved in browser localStorage.
+  </Card>
+  <Card title="Automatic Saving" icon="floppy-disk">
+    Every successful generation is saved automatically — no manual action required.
+  </Card>
+  <Card title="Visual Timeline" icon="clock">
+    History sidebar shows thumbnails in reverse chronological order (newest first).
+  </Card>
+  <Card title="One-Click Download" icon="download">
+    Download any past generation directly from the history sidebar.
+  </Card>
+</CardGroup>
+
+## How It Works
+
+### Storage Flow
+
+<Steps>
+  <Step title="Generation Completes">
+    When an image or video generation finishes successfully, the API returns a result URL:
+    
+    ```
+    Image: https://api.muapi.ai/outputs/image-abc123.jpg
+    Video: https://api.muapi.ai/outputs/video-def456.mp4
+    ```
+  </Step>
+  
+  <Step title="Save to History">
+    The studio immediately saves the generation to localStorage with full metadata:
+    
+    ```javascript
+    {
+      id: "req_abc123",
+      url: "https://api.muapi.ai/outputs/image-abc123.jpg",
+      prompt: "A futuristic cityscape at sunset",
+      model: "nano-banana",
+      aspect_ratio: "16:9",
+      resolution: "2k",
+      timestamp: "2024-03-15T10:30:00.000Z"
+    }
+    ```
+  </Step>
+  
+  <Step title="Show in Sidebar">
+    The history sidebar automatically appears (if hidden) and displays the new generation at the top with a glowing border.
+  </Step>
+  
+  <Step title="Persist Across Sessions">
+    The history survives browser restarts. When you return to the studio, your history is loaded from localStorage and the sidebar appears automatically.
+  </Step>
+</Steps>
+
+### Storage Locations
+
+Each studio maintains its own history in localStorage:
+
+- **Image Studio**: `muapi_history` (up to 50 entries)
+- **Video Studio**: `video_history` (up to 30 entries)
+- **Cinema Studio**: `cinema_history` (up to 50 entries)
+
+<Info>
+Image Studio and Cinema Studio share the same history key (`muapi_history`) but store different metadata (Cinema Studio saves camera settings).
+</Info>
+
+## Using Generation History
+
+### Viewing Past Generations
+
+<Steps>
+  <Step title="Open Studio">
+    Navigate to Image Studio, Video Studio, or Cinema Studio.
+  </Step>
+  
+  <Step title="Locate History Sidebar">
+    If you have any past generations, the **history sidebar** appears automatically on the right side of the screen:
+    
+    - **Width**: 80px (mobile) or 96px (desktop)
+    - **Label**: "History" at the top
+    - **Thumbnails**: Displayed in a vertical list
+  </Step>
+  
+  <Step title="Click a Thumbnail">
+    Click any thumbnail to:
+    
+    - View the full-resolution result in the canvas
+    - Highlight the thumbnail with a yellow glow
+    - Load associated metadata (prompt, model, settings)
+  </Step>
+  
+  <Step title="View in Canvas">
+    The selected generation displays in the canvas with action buttons:
+    
+    - **↻ Regenerate** — Run the same generation again
+    - **↓ Download** — Save to your device
+    - **+ New** — Return to prompt bar for a new generation
+  </Step>
+</Steps>
+
+### Downloading from History
+
+<Tabs>
+  <Tab title="From Canvas View">
+    <Steps>
+      <Step title="Select Generation">
+        Click a history thumbnail to view it in the canvas.
+      </Step>
+      
+      <Step title="Click Download Button">
+        Click the **↓ Download** button in the canvas controls.
+      </Step>
+      
+      <Step title="Save File">
+        The file downloads as:
+        - **Images**: `muapi-{id}.jpg`
+        - **Videos**: `video-{id}.mp4`
+        - **Cinema**: `cinema-shot-{timestamp}.jpg`
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab title="From History Sidebar">
+    <Steps>
+      <Step title="Hover Over Thumbnail">
+        Hover over any thumbnail in the history sidebar.
+      </Step>
+      
+      <Step title="Click Download Icon">
+        A download button (📥) appears in the hover overlay. Click it.
+      </Step>
+      
+      <Step title="Save File">
+        The file downloads immediately without loading in the canvas.
+      </Step>
+    </Steps>
+    
+    <Note>
+    Sidebar downloads are faster because they skip the canvas view step.
+    </Note>
+  </Tab>
+</Tabs>
+
+### Sidebar UI Elements
+
+<Tabs>
+  <Tab title="Thumbnail Cards">
+    Each history entry is displayed as a square thumbnail card:
+    
+    **Visual Elements:**
+    - **Thumbnail image** — Preview of the generated result
+    - **Border** — Yellow glow for active/latest, subtle for others
+    - **Aspect ratio** — Square crop for consistency
+    - **Hover overlay** — Black semi-transparent with download button
+    
+    **Interaction:**
+    - **Click** → Load in canvas view
+    - **Hover** → Show download button
+    - **Active state** → Yellow border with glow effect
+  </Tab>
+  
+  <Tab title="Empty State">
+    When you haven't generated anything yet, the sidebar is **hidden** (translated off-screen).
+    
+    After your first generation, the sidebar automatically slides in from the right.
+  </Tab>
+  
+  <Tab title="Auto-Scroll">
+    The sidebar supports vertical scrolling when you have many generations:
+    
+    - **Custom scrollbar** — Styled to match the dark theme
+    - **Smooth scroll** — Drag or mousewheel to navigate
+    - **No horizontal scroll** — Fixed width prevents overflow
+  </Tab>
+</Tabs>
+
+## History Metadata
+
+### Image Studio History
+
+Each image generation saves:
+
+```typescript
+interface ImageHistoryEntry {
+  id: string;              // Request ID or timestamp
+  url: string;             // Full-resolution image URL
+  prompt: string;          // Original prompt
+  model: string;           // Model ID (e.g., "nano-banana")
+  aspect_ratio: string;    // Selected aspect ratio (e.g., "16:9")
+  resolution?: string;     // Resolution/quality (e.g., "2k", "high")
+  timestamp: string;       // ISO 8601 timestamp
+}
+```
+
+**Storage key**: `muapi_history`  
+**Max entries**: 50  
+**Oldest removed**: FIFO (first-in, first-out)
+
+### Video Studio History
+
+Each video generation saves:
+
+```typescript
+interface VideoHistoryEntry {
+  id: string;              // Request ID or timestamp
+  url: string;             // Full-resolution video URL
+  prompt: string;          // Original prompt
+  model: string;           // Model ID (e.g., "seedance-v2.0-t2v")
+  aspect_ratio: string;    // Selected aspect ratio
+  duration: number;        // Duration in seconds
+  resolution?: string;     // Resolution (e.g., "720p", "1080p")
+  quality?: string;        // Quality preset (e.g., "basic", "high")
+  timestamp: string;       // ISO 8601 timestamp
+}
+```
+
+**Storage key**: `video_history`  
+**Max entries**: 30 (smaller than images due to localStorage size limits)  
+**Oldest removed**: FIFO
+
+### Cinema Studio History
+
+Each cinematic shot saves additional camera settings:
+
+```typescript
+interface CinemaHistoryEntry {
+  url: string;                  // Full-resolution image URL
+  timestamp: number;            // Unix timestamp
+  settings: {
+    prompt: string;             // Original scene description
+    camera: string;             // Camera body (e.g., "Modular 8K Digital")
+    lens: string;               // Lens type (e.g., "Classic Anamorphic")
+    focal: number;              // Focal length (8-85mm)
+    aperture: string;           // Aperture (e.g., "f/1.4")
+    aspect_ratio: string;       // Selected aspect ratio
+    resolution: string;         // Resolution (e.g., "2K")
+  };
+}
+```
+
+**Storage key**: `cinema_history`  
+**Max entries**: 50  
+**Oldest removed**: FIFO
+
+<Info>
+Cinema Studio stores full camera settings so you can reload and iterate on past shots with the exact same technical specifications.
+</Info>
+
+## Advanced Features
+
+### Regenerating from History
+
+<Steps>
+  <Step title="Select History Entry">
+    Click a thumbnail in the history sidebar to view it in the canvas.
+  </Step>
+  
+  <Step title="Click Regenerate Button">
+    Click **↻ Regenerate** in the canvas controls.
+  </Step>
+  
+  <Step title="Studio Reloads Settings">
+    The studio returns to the prompt bar with all settings pre-filled:
+    
+    - **Prompt** (if saved)
+    - **Model** (same as original)
+    - **Aspect ratio** (same as original)
+    - **Quality/resolution** (same as original)
+    - **Camera settings** (Cinema Studio only)
+  </Step>
+  
+  <Step title="Generate Again">
+    Click **Generate ✨** to create a variation of the original generation.
+  </Step>
+</Steps>
+
+<Note>
+Regenerating produces a **new variation**, not an exact copy. AI models are non-deterministic (different outputs for the same input).
+</Note>
+
+### Restoring Cinema Studio Settings
+
+Cinema Studio's history is especially powerful because it restores **full camera settings**:
+
+<Steps>
+  <Step title="Click History Thumbnail">
+    Select any past generation in Cinema Studio.
+  </Step>
+  
+  <Step title="Settings Auto-Restore">
+    The prompt bar automatically updates with:
+    
+    - Original prompt
+    - Camera body, lens, focal length, aperture
+    - Aspect ratio and resolution
+    
+    The summary card and all controls reflect the restored settings.
+  </Step>
+  
+  <Step title="Iterate on Settings">
+    Modify any setting (e.g., change aperture from f/1.4 to f/11) and generate again to see how it affects the shot.
+  </Step>
+</Steps>
+
+This workflow enables **rapid experimentation** with different camera settings using the same base prompt.
+
+## History Limits
+
+### Why Limits Exist
+
+Browser localStorage has a **per-origin limit** (typically 5-10MB). To stay within this limit:
+
+- **Image Studio**: 50 generations (text data only, ~50KB)
+- **Video Studio**: 30 generations (text data only, ~30KB)
+- **Cinema Studio**: 50 generations (text + camera settings, ~75KB)
+
+<Warning>
+The **media files (images/videos) are not stored in localStorage** — only the URLs and metadata. The actual files are hosted on Muapi.ai and loaded from there.
+</Warning>
+
+### What Happens at the Limit
+
+When you exceed the limit:
+
+1. The **oldest entry is removed** (FIFO)
+2. The new entry is added to the front of the array
+3. The updated history is saved to localStorage
+
+This ensures your **most recent generations** are always saved.
+
+### Increasing Limits
+
+You can increase the limits by modifying the source code:
+
+**Image Studio** (`src/components/ImageStudio.js`):
+```javascript
+// Line 433
+localStorage.setItem('muapi_history', JSON.stringify(generationHistory.slice(0, 100))); // Changed from 50
+```
+
+**Video Studio** (`src/components/VideoStudio.js`):
+```javascript
+// Line 692
+localStorage.setItem('video_history', JSON.stringify(generationHistory.slice(0, 50))); // Changed from 30
+```
+
+<Warning>
+Increasing limits may cause localStorage to exceed browser limits. Test thoroughly after changes.
+</Warning>
+
+## Managing History
+
+### Clearing History
+
+There's no built-in "clear all" button, but you can manually clear history via browser console:
+
+<Tabs>
+  <Tab title="Clear Image History">
+    ```javascript
+    localStorage.removeItem('muapi_history');
+    ```
+  </Tab>
+  
+  <Tab title="Clear Video History">
+    ```javascript
+    localStorage.removeItem('video_history');
+    ```
+  </Tab>
+  
+  <Tab title="Clear Cinema History">
+    ```javascript
+    localStorage.removeItem('cinema_history');
+    ```
+  </Tab>
+  
+  <Tab title="Clear All History">
+    ```javascript
+    localStorage.clear(); // Warning: Also clears API key and upload history
+    ```
+  </Tab>
+</Tabs>
+
+### Exporting History
+
+You can export your generation history as JSON for backup or analysis:
+
+```javascript
+// In browser console
+const imageHistory = JSON.parse(localStorage.getItem('muapi_history') || '[]');
+console.log(JSON.stringify(imageHistory, null, 2));
+```
+
+Copy the output and save as `history.json`.
+
+### Importing History
+
+To restore a previously exported history:
+
+```javascript
+// In browser console
+const importedHistory = [ /* paste your exported history */ ];
+localStorage.setItem('muapi_history', JSON.stringify(importedHistory));
+location.reload(); // Reload to display
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Organizing Your Work">
+    - **Download important generations** — Don't rely solely on history (localStorage can be cleared)
+    - **Keep notes separately** — localStorage doesn't support custom notes; use external tools
+    - **Export periodically** — Back up your history JSON for safekeeping
+  </Accordion>
+  
+  <Accordion title="Performance Considerations">
+    - **Clear old generations** — If you have 50+ generations, performance may degrade slightly
+    - **Don't exceed limits** — Stay within the default limits (50/30) for best performance
+    - **Use download** — Download generations you want to keep long-term
+  </Accordion>
+  
+  <Accordion title="Privacy & Security">
+    - **Hosted URLs are public** — Anyone with a Muapi.ai URL can view the generation
+    - **Don't generate sensitive content** — Generations may be accessible by anyone with the URL
+    - **Clear history before sharing** — If you share your browser or demo the app, clear generation history first
+  </Accordion>
+</AccordionGroup>
+
+## Use Cases
+
+<AccordionGroup>
+  <Accordion title="Learning from Past Generations">
+    Review your generation history to:
+    - **Identify effective prompts** — See which prompts produced the best results
+    - **Compare models** — Test the same prompt across different models
+    - **Track experiments** — Keep a log of what settings worked well
+  </Accordion>
+  
+  <Accordion title="Iterating on Ideas">
+    Use history to refine your creative vision:
+    - **Regenerate with tweaks** — Load a past generation, adjust settings, regenerate
+    - **A/B testing** — Compare different camera settings, aspect ratios, or quality levels
+    - **Style consistency** — Reload settings from a successful generation to maintain style
+  </Accordion>
+  
+  <Accordion title="Portfolio Building">
+    Download your best generations to build a portfolio:
+    - **Curate your work** — Review history and download favorites
+    - **Track progress** — See how your prompting skills improve over time
+    - **Showcase variety** — Export generations from different studios and models
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="History empty after browser restart">
+    **Cause**: localStorage cleared or browser in private mode
+    
+    **Solution**:
+    - Check if browser is in incognito/private mode (localStorage is session-only)
+    - Ensure browser allows localStorage for your origin
+    - Re-generate content to rebuild history
+  </Accordion>
+  
+  <Accordion title="Thumbnails not loading">
+    **Cause**: Muapi.ai URLs expired or network issue
+    
+    **Solution**:
+    - Check browser console for network errors
+    - Try viewing in canvas (click thumbnail) to see full error
+    - If URL expired, the generation is lost (download important ones!)
+  </Accordion>
+  
+  <Accordion title="History sidebar not appearing">
+    **Cause**: No generations in history yet, or CSS transition issue
+    
+    **Solution**:
+    - Generate at least one image/video to trigger sidebar appearance
+    - Check browser console for JavaScript errors
+    - Reload the page to reset transitions
+  </Accordion>
+  
+  <Accordion title="Old generations disappearing">
+    **Cause**: History limit reached (50 images or 30 videos)
+    
+    **Solution**:
+    - **Expected behavior** — Oldest entries are removed when limit is reached
+    - Download important generations before they're removed
+    - Increase history limit in source code (see "Increasing Limits" above)
+  </Accordion>
+</AccordionGroup>
+
+## Related Features
+
+<CardGroup cols={3}>
+  <Card title="Upload History" icon="clock-rotate-left" href="/features/upload-history">
+    Manage reference images across studios
+  </Card>
+  <Card title="Image Studio" icon="image" href="/features/image-studio">
+    Generate and edit images with AI
+  </Card>
+  <Card title="Video Studio" icon="video" href="/features/video-studio">
+    Create AI videos from text or images
+  </Card>
+</CardGroup>

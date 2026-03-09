@@ -1,0 +1,471 @@
+---
+title: 'Upload History'
+description: 'Reuse uploaded reference images across sessions without re-uploading'
+icon: 'clock-rotate-left'
+---
+
+Every image you upload to Open Higgsfield AI is automatically saved to your **upload history**, stored locally in your browser. This means you never have to upload the same image twice.
+
+## Overview
+
+Upload history provides:
+
+<CardGroup cols={2}>
+  <Card title="Persistent Storage" icon="database">
+    Up to 20 uploads saved in browser localStorage, surviving browser restarts.
+  </Card>
+  <Card title="Cross-Studio Access" icon="arrows-turn-to-dots">
+    Upload history is shared between Image Studio and Video Studio — upload once, use everywhere.
+  </Card>
+  <Card title="Fast Thumbnails" icon="image">
+    80×80px thumbnails generated client-side for instant preview in the picker.
+  </Card>
+  <Card title="No Re-Upload" icon="ban">
+    Select previously uploaded images instantly without waiting for upload.
+  </Card>
+</CardGroup>
+
+## How It Works
+
+### Upload Flow
+
+<Steps>
+  <Step title="User Selects Image">
+    You choose an image from your device using the upload button in Image Studio or Video Studio.
+  </Step>
+  
+  <Step title="Upload to Muapi.ai">
+    The image uploads to [Muapi.ai](https://muapi.ai) via `POST /api/v1/upload_file` (multipart/form-data) and returns a hosted URL.
+    
+    ```
+    Example URL: https://api.muapi.ai/uploads/abc123.jpg
+    ```
+  </Step>
+  
+  <Step title="Generate Thumbnail">
+    While uploading, a **thumbnail is generated client-side**:
+    
+    - Renders image to a 80×80px HTML canvas
+    - Center-crops to square
+    - Exports as base64 JPEG (60% quality)
+    - Stores ~2-5KB per thumbnail
+  </Step>
+  
+  <Step title="Save to History">
+    The upload entry is saved to browser localStorage:
+    
+    ```javascript
+    {
+      id: "1678901234567",
+      name: "my-photo.jpg",
+      uploadedUrl: "https://api.muapi.ai/uploads/abc123.jpg",
+      thumbnail: "data:image/jpeg;base64,/9j/4AAQ...",
+      timestamp: "2024-03-15T10:30:00.000Z"
+    }
+    ```
+    
+    The history is capped at **20 uploads** (oldest entries are removed when exceeding).
+  </Step>
+  
+  <Step title="Reuse Without Upload">
+    Next time you need this image, click it in the picker panel — **no upload needed**. The hosted URL is reused instantly.
+  </Step>
+</Steps>
+
+### Storage Location
+
+All upload history is stored in **browser localStorage** under the key:
+
+```
+muapi_uploads
+```
+
+This means:
+
+- **Persistent** — Survives browser restarts
+- **Local** — Never sent to any server (except the image URLs, which point to Muapi.ai)
+- **Private** — Only accessible by this origin (your local or hosted app)
+- **Limited** — ~5-10MB total localStorage limit (varies by browser)
+
+<Warning>
+If you clear browser data or localStorage, your upload history will be lost. The hosted images on Muapi.ai remain accessible if you have the URLs.
+</Warning>
+
+## Using Upload History
+
+### Accessing the Picker
+
+<Steps>
+  <Step title="Open Image Studio or Video Studio">
+    Navigate to the studio where you want to use a reference image.
+  </Step>
+  
+  <Step title="Click Upload Button">
+    Click the **upload button** (📤 icon) in the prompt bar to open the reference image picker.
+  </Step>
+  
+  <Step title="View History">
+    The picker shows all previously uploaded images in a **3-column grid** with thumbnails.
+    
+    If you haven't uploaded anything yet, you'll see an empty state:
+    
+    > 📤 No uploads yet
+  </Step>
+  
+  <Step title="Select an Image">
+    Click any thumbnail to select it:
+    
+    - **Single-image mode** (default) → Instant selection, picker closes
+    - **Multi-image mode** (multi-image models) → Toggle selection, shows order badge
+  </Step>
+</Steps>
+
+### Picker UI Elements
+
+<Tabs>
+  <Tab title="Header">
+    **Left Side:**
+    - **Title**: "Reference Images"
+    - **Hint** (multi-mode only): "Select up to X images"
+    
+    **Right Side:**
+    - **"Upload new" button** (single-mode) or **"Upload files" button** (multi-mode)
+    - **"Done (X)" button** (multi-mode, when images selected)
+  </Tab>
+  
+  <Tab title="Image Grid">
+    - **3-column layout** for optimal mobile/desktop viewing
+    - **Square aspect ratio** for consistent grid
+    - **Thumbnail preview** (80×80px upscaled to fit)
+    - **Hover overlay** with delete button (✕)
+    - **Selection badge** (checkmark or order number)
+    - **Border glow** on selected images
+  </Tab>
+  
+  <Tab title="Bottom Bar (Multi-Mode)">
+    Appears when 1+ images are selected in multi-mode:
+    
+    - **Status**: "X of Y selected"
+    - **"Use Selected" button** to confirm and close
+  </Tab>
+</Tabs>
+
+### Managing History
+
+#### Removing Images
+
+<Steps>
+  <Step title="Open Picker">
+    Click the upload button to open the picker panel.
+  </Step>
+  
+  <Step title="Hover Over Image">
+    Hover over any thumbnail to reveal the delete button (✕) in the bottom-right corner.
+  </Step>
+  
+  <Step title="Click Delete">
+    Click the ✕ button to remove the image from history.
+    
+    <Warning>
+    This only removes the entry from localStorage. The image URL on Muapi.ai remains valid, but you'll lose the thumbnail and quick access.
+    </Warning>
+  </Step>
+  
+  <Step title="Grid Updates">
+    The image is immediately removed from the grid. If it was selected, the selection is cleared.
+  </Step>
+</Steps>
+
+#### Clearing All History
+
+There's no built-in "clear all" button, but you can manually clear history via browser console:
+
+```javascript
+localStorage.removeItem('muapi_uploads');
+```
+
+Or clear all localStorage for the site:
+
+```javascript
+localStorage.clear();
+```
+
+<Warning>
+Clearing localStorage also removes your API key, generation history, and other settings. Use with caution.
+</Warning>
+
+## Technical Details
+
+### Storage Schema
+
+Each upload entry in localStorage follows this structure:
+
+```typescript
+interface UploadEntry {
+  id: string;          // Timestamp-based unique ID
+  name: string;        // Original filename (e.g., "photo.jpg")
+  uploadedUrl: string; // Hosted URL from Muapi.ai
+  thumbnail: string;   // Base64 data URI (80×80px JPEG)
+  timestamp: string;   // ISO 8601 timestamp
+}
+```
+
+The full history is stored as a JSON array:
+
+```json
+[
+  {
+    "id": "1678901234567",
+    "name": "sunset.jpg",
+    "uploadedUrl": "https://api.muapi.ai/uploads/abc123.jpg",
+    "thumbnail": "data:image/jpeg;base64,/9j/4AAQ...",
+    "timestamp": "2024-03-15T10:30:00.000Z"
+  },
+  ...
+]
+```
+
+### Thumbnail Generation
+
+Thumbnails are generated using HTML5 Canvas API:
+
+```javascript
+export async function generateThumbnail(file) {
+  return new Promise((resolve) => {
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const SIZE = 80;
+      const canvas = document.createElement('canvas');
+      canvas.width = SIZE;
+      canvas.height = SIZE;
+      const ctx = canvas.getContext('2d');
+      
+      // Center-crop to square
+      const size = Math.min(img.width, img.height);
+      const sx = (img.width - size) / 2;
+      const sy = (img.height - size) / 2;
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, SIZE, SIZE);
+      
+      URL.revokeObjectURL(objectUrl);
+      resolve(canvas.toDataURL('image/jpeg', 0.6));
+    };
+    img.src = objectUrl;
+  });
+}
+```
+
+**Process:**
+1. Load image file as Object URL
+2. Draw to 80×80px canvas with center-crop
+3. Export as base64 JPEG at 60% quality
+4. Store in localStorage (~2-5KB per thumbnail)
+
+### Storage Limits
+
+Browser localStorage limits vary:
+
+- **Most browsers**: ~5-10MB per origin
+- **Chrome/Edge**: 10MB
+- **Firefox**: 10MB
+- **Safari**: 5MB
+
+With 20 uploads and ~5KB per thumbnail:
+
+```
+20 uploads × 5KB = 100KB for thumbnails
++ JSON overhead = ~150KB total
+```
+
+This leaves plenty of room for other data (API key, generation history, settings).
+
+<Note>
+If localStorage fills up, older uploads are removed first (FIFO). You can manually increase the limit by reducing `MAX_UPLOADS` in `src/lib/uploadHistory.js`.
+</Note>
+
+## Cross-Studio Integration
+
+### Shared History
+
+Upload history is **shared between Image Studio and Video Studio** because:
+
+- Both studios use the same `createUploadPicker()` component
+- Both access the same localStorage key (`muapi_uploads`)
+- Both upload to the same Muapi.ai endpoint
+
+**Example workflow:**
+
+1. Upload an image in **Image Studio** for image-to-image editing
+2. Switch to **Video Studio**
+3. Click upload button — the same image appears in history
+4. Select it to animate as a start frame for image-to-video
+
+### Cinema Studio
+
+Cinema Studio does **not** use upload history because it's a text-to-image-only workflow (no reference images).
+
+## Use Cases
+
+<AccordionGroup>
+  <Accordion title="Iterating on a Reference Image">
+    Upload a reference image once, then experiment with different:
+    - Models (Nano Banana Edit, Flux Kontext, Seededit, etc.)
+    - Prompts ("make it a painting", "remove background", "upscale 4x")
+    - Settings (aspect ratio, quality, resolution)
+    
+    No need to re-upload the image for each generation.
+  </Accordion>
+  
+  <Accordion title="Cross-Studio Workflows">
+    1. Upload a portrait in **Image Studio**
+    2. Edit it with Nano Banana 2 Edit (change background)
+    3. Download the result
+    4. Switch to **Video Studio**
+    5. Select the edited image from history
+    6. Animate it with Kling I2V
+    
+    The original upload persists in history for future use.
+  </Accordion>
+  
+  <Accordion title="Multi-Image Experiments">
+    Upload 10-14 images once, then try different combinations:
+    - Select images 1, 3, 5 for one generation
+    - Select images 2, 4, 6 for another
+    - Reorder images to test priority effects
+    
+    All images remain in history for quick selection.
+  </Accordion>
+  
+  <Accordion title="Style Reference Library">
+    Build a library of style references:
+    - Upload 20 favorite art styles, textures, or color palettes
+    - Use them across sessions for consistent style transfer
+    - Mix and match with new content images
+    
+    Your style library persists in history.
+  </Accordion>
+</AccordionGroup>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Organizing Your History">
+    - **Remove unused images** — Keep history clean by deleting old/unused uploads
+    - **Re-upload important images** — If you clear history, important images will need re-uploading
+    - **Use descriptive filenames** — Filenames are shown in tooltips (hover over thumbnails)
+  </Accordion>
+  
+  <Accordion title="Storage Management">
+    - **Stay under 20 uploads** — The limit prevents localStorage bloat
+    - **Clear periodically** — Remove old uploads you no longer need
+    - **Backup URLs** — If you have important hosted URLs, save them elsewhere (they remain valid even if removed from history)
+  </Accordion>
+  
+  <Accordion title="Privacy & Security">
+    - **Hosted images are public** — Muapi.ai URLs are publicly accessible (no authentication required)
+    - **Don't upload sensitive images** — Uploaded images may be accessible by anyone with the URL
+    - **Clear history before sharing** — If you share your browser or demo the app, clear upload history first
+  </Accordion>
+</AccordionGroup>
+
+## API Reference
+
+### `getUploadHistory()`
+
+Returns the full upload history array from localStorage.
+
+```javascript
+import { getUploadHistory } from './lib/uploadHistory.js';
+
+const history = getUploadHistory();
+// [ { id, name, uploadedUrl, thumbnail, timestamp }, ... ]
+```
+
+### `saveUpload(entry)`
+
+Saves a new upload entry to history (prepends to array, keeps last 20).
+
+```javascript
+import { saveUpload } from './lib/uploadHistory.js';
+
+saveUpload({
+  id: Date.now().toString(),
+  name: 'photo.jpg',
+  uploadedUrl: 'https://api.muapi.ai/uploads/abc123.jpg',
+  thumbnail: 'data:image/jpeg;base64,...',
+  timestamp: new Date().toISOString()
+});
+```
+
+### `removeUpload(id)`
+
+Removes an upload entry by ID.
+
+```javascript
+import { removeUpload } from './lib/uploadHistory.js';
+
+removeUpload('1678901234567');
+```
+
+### `generateThumbnail(file)`
+
+Generates a 80×80px base64 thumbnail from a File object.
+
+```javascript
+import { generateThumbnail } from './lib/uploadHistory.js';
+
+const thumbnail = await generateThumbnail(file);
+// "data:image/jpeg;base64,/9j/4AAQ..."
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Upload history empty after browser restart">
+    **Cause**: localStorage was cleared by browser or user
+    
+    **Solution**: 
+    - Check if browser is in private/incognito mode (localStorage is session-only)
+    - Re-upload images to rebuild history
+    - Ensure browser allows localStorage for your origin
+  </Accordion>
+  
+  <Accordion title="Thumbnails not loading">
+    **Cause**: Corrupt base64 data or invalid data URI
+    
+    **Solution**:
+    - Clear upload history and re-upload images
+    - Check browser console for errors
+    - Ensure images are valid formats (JPEG, PNG, WebP)
+  </Accordion>
+  
+  <Accordion title="Can't remove images from history">
+    **Cause**: Click handler not working or localStorage read-only
+    
+    **Solution**:
+    - Check browser console for JavaScript errors
+    - Try clearing history manually via console: `localStorage.removeItem('muapi_uploads')`
+  </Accordion>
+  
+  <Accordion title="History limit reached">
+    **Cause**: 20 uploads stored, no more room
+    
+    **Solution**:
+    - Remove old uploads to make room for new ones
+    - Or increase `MAX_UPLOADS` in `src/lib/uploadHistory.js` (not recommended without testing)
+  </Accordion>
+</AccordionGroup>
+
+## Related Features
+
+<CardGroup cols={3}>
+  <Card title="Multi-Image Input" icon="images" href="/features/multi-image-input">
+    Use multiple images from history in a single generation
+  </Card>
+  <Card title="Image Studio" icon="image" href="/features/image-studio">
+    Image-to-image editing with reference images
+  </Card>
+  <Card title="Video Studio" icon="video" href="/features/video-studio">
+    Image-to-video animation with start frames
+  </Card>
+</CardGroup>

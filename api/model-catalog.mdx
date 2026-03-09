@@ -1,0 +1,540 @@
+---
+title: "Model Catalog"
+description: "Complete reference for accessing model metadata, inputs, and helper functions"
+---
+
+## Overview
+
+The model catalog provides structured metadata for all available AI models. Each model definition includes:
+
+- Model ID and display name
+- API endpoint
+- Supported input parameters with types and constraints
+- Default values and validation rules
+
+## Model Arrays
+
+### Text-to-Image Models
+
+```javascript
+import { t2iModels, getModelById } from './lib/models.js';
+
+const model = getModelById('flux-dev');
+```
+
+**Array:** `t2iModels`  
+**Count:** 50+ models including Flux, Midjourney, DALL-E, Stable Diffusion variants
+
+### Text-to-Video Models
+
+```javascript
+import { t2vModels, getVideoModelById } from './lib/models.js';
+
+const model = getVideoModelById('kling-v2.6-pro-t2v');
+```
+
+**Array:** `t2vModels`  
+**Count:** 30+ models including Kling, Runway, Sora, Luma, Hailuo
+
+### Image-to-Image Models
+
+```javascript
+import { i2iModels, getI2IModelById } from './lib/models.js';
+
+const model = getI2IModelById('flux-kontext-dev-i2i');
+```
+
+**Array:** `i2iModels`  
+**Count:** 60+ models including editing tools, upscalers, style transfer
+
+### Image-to-Video Models
+
+```javascript
+import { i2vModels, getI2VModelById } from './lib/models.js';
+
+const model = getI2VModelById('runway-image-to-video');
+```
+
+**Array:** `i2vModels`  
+**Count:** 15+ models for animating still images
+
+### Video-to-Video Models
+
+```javascript
+import { v2vModels, getV2VModelById } from './lib/models.js';
+
+const model = getV2VModelById('video-watermark-remover');
+```
+
+**Array:** `v2vModels`  
+**Count:** Processing tools like watermark removal
+
+## Model Object Schema
+
+### Basic Structure
+
+```typescript
+{
+  id: string;              // Unique identifier
+  name: string;            // Display name
+  endpoint?: string;       // API endpoint (defaults to id)
+  family?: string;         // Model family grouping
+  inputs: {                // Input parameter definitions
+    [key: string]: {
+      type: string;        // 'string' | 'int' | 'boolean' | 'array'
+      title: string;       // Display label
+      name: string;        // Parameter name
+      description: string; // Help text
+      default?: any;       // Default value
+      enum?: any[];        // Allowed values
+      minValue?: number;   // Min constraint
+      maxValue?: number;   // Max constraint
+      step?: number;       // Increment step
+      examples?: any[];    // Example values
+    }
+  }
+}
+```
+
+### Example: Flux Dev Model
+
+```javascript
+{
+  "id": "flux-dev",
+  "name": "Flux Dev",
+  "endpoint": "flux-dev-image",
+  "inputs": {
+    "prompt": {
+      "type": "string",
+      "title": "Prompt",
+      "name": "prompt",
+      "description": "Text prompt describing the image. Length: 2-3000 characters.",
+      "examples": [
+        "Extreme close-up of a single tiger eye..."
+      ]
+    },
+    "width": {
+      "type": "int",
+      "title": "Width",
+      "name": "width",
+      "description": "Width divisible by 64",
+      "default": 1024,
+      "minValue": 128,
+      "maxValue": 2048,
+      "step": 64
+    },
+    "num_images": {
+      "type": "int",
+      "title": "Number of images",
+      "name": "num_images",
+      "default": 1,
+      "minValue": 1,
+      "maxValue": 4
+    }
+  }
+}
+```
+
+## I2I Model Extensions
+
+Image-to-Image models have additional fields:
+
+```typescript
+{
+  imageField: string;      // Image input field name
+  hasPrompt: boolean;      // Whether prompt is supported
+  maxImages?: number;      // Max reference images (default 1)
+}
+```
+
+### Example: Flux Kontext Dev I2I
+
+```javascript
+{
+  "id": "flux-kontext-dev-i2i",
+  "name": "Flux Kontext Dev I2I",
+  "endpoint": "flux-kontext-dev-i2i",
+  "family": "kontext",
+  "imageField": "images_list",
+  "hasPrompt": true,
+  "maxImages": 10,
+  "inputs": {
+    "prompt": { /* ... */ },
+    "aspect_ratio": {
+      "enum": ["16:9", "9:16", "1:1", "4:3", "3:4", "3:2", "2:3", "21:9", "9:21"],
+      "default": "1:1"
+    },
+    "num_images": {
+      "default": 1,
+      "minValue": 1,
+      "maxValue": 4
+    }
+  }
+}
+```
+
+<Note>
+The `imageField` tells the client which payload key to use for images:
+- `image_url` - Single image URL
+- `images_list` - Array of image URLs
+- `model_image_url` - Model/reference image
+</Note>
+
+## I2V Model Extensions
+
+Image-to-Video models have:
+
+```typescript
+{
+  imageField: string;      // Image input field name
+  hasPrompt: boolean;      // Whether prompt is supported
+}
+```
+
+## Helper Functions
+
+### Get Model by ID
+
+```javascript
+import { getModelById, getVideoModelById, getI2IModelById, getI2VModelById } from './lib/models.js';
+
+const t2iModel = getModelById('flux-dev');
+const t2vModel = getVideoModelById('kling-v2.6-pro-t2v');
+const i2iModel = getI2IModelById('flux-kontext-dev-i2i');
+const i2vModel = getI2VModelById('runway-image-to-video');
+```
+
+<ParamField path="id" type="string" required>
+  The model ID to look up
+</ParamField>
+
+<ResponseField name="model" type="object | undefined">
+  Model definition object or undefined if not found
+</ResponseField>
+
+### Get Aspect Ratios
+
+```javascript
+import { 
+  getAspectRatiosForModel,
+  getAspectRatiosForVideoModel,
+  getAspectRatiosForI2IModel,
+  getAspectRatiosForI2VModel 
+} from './lib/models.js';
+
+const ratios = getAspectRatiosForModel('flux-dev');
+// Returns: ['16:9', '9:16', '1:1', '4:3', '3:2', '21:9']
+```
+
+<ResponseField name="ratios" type="array">
+  Array of supported aspect ratio strings
+</ResponseField>
+
+**Defaults if not defined:**
+- T2I: `['1:1', '16:9', '9:16', '4:3', '3:2', '21:9']`
+- T2V/I2V: `['16:9', '9:16', '1:1']`
+- I2I: `['1:1', '16:9', '9:16']`
+
+### Get Durations
+
+```javascript
+import { getDurationsForModel, getDurationsForI2VModel } from './lib/models.js';
+
+const durations = getDurationsForModel('kling-v2.6-pro-t2v');
+// Returns: [5, 10]
+
+const i2vDurations = getDurationsForI2VModel('runway-image-to-video');
+```
+
+<ResponseField name="durations" type="array">
+  Array of supported duration values in seconds
+</ResponseField>
+
+**Logic:**
+1. If `inputs.duration.enum` exists, return it
+2. If `inputs.duration.minValue/maxValue/step` exist, generate range
+3. If `inputs.duration.default` exists, return `[default]`
+4. Otherwise return `[]`
+
+### Get Resolutions
+
+```javascript
+import { 
+  getResolutionsForModel,
+  getResolutionsForVideoModel,
+  getResolutionsForI2IModel,
+  getResolutionsForI2VModel 
+} from './lib/models.js';
+
+const resolutions = getResolutionsForVideoModel('runway-text-to-video');
+// Returns: ['720p', '1080p']
+
+const imageRes = getResolutionsForModel('bytedance-seedream-v4');
+// Returns: ['1K', '2K', '4K']
+```
+
+<ResponseField name="resolutions" type="array">
+  Array of resolution/quality options
+</ResponseField>
+
+<Note>
+Some models use `quality` instead of `resolution` (e.g., `basic`, `high`). These functions check both fields.
+</Note>
+
+### Get Quality Field Name
+
+```javascript
+import { getQualityFieldForModel, getQualityFieldForI2IModel } from './lib/models.js';
+
+const field = getQualityFieldForModel('flux-dev');
+// Returns: null (no quality/resolution field)
+
+const field2 = getQualityFieldForModel('bytedance-seedream-v4');
+// Returns: 'resolution'
+
+const field3 = getQualityFieldForModel('seedance-v2.0-t2v');
+// Returns: 'quality'
+```
+
+<ResponseField name="fieldName" type="string | null">
+  The payload field name (`'resolution'`, `'quality'`, or `null`)
+</ResponseField>
+
+### Get Max Images for I2I
+
+```javascript
+import { getMaxImagesForI2IModel } from './lib/models.js';
+
+const max = getMaxImagesForI2IModel('flux-kontext-dev-i2i');
+// Returns: 10
+
+const max2 = getMaxImagesForI2IModel('gpt4o-image-to-image');
+// Returns: 5
+```
+
+<ResponseField name="maxImages" type="number">
+  Maximum number of reference images (defaults to 1)
+</ResponseField>
+
+## Accessing Model Data
+
+### List All Models
+
+```javascript
+import { t2iModels } from './lib/models.js';
+
+t2iModels.forEach(model => {
+  console.log(`${model.name} (${model.id})`);
+});
+```
+
+### Check If Model Has Prompt
+
+```javascript
+const model = getI2IModelById('ai-image-upscaler');
+if (model.hasPrompt) {
+  // Show prompt input
+} else {
+  // Hide prompt input
+}
+```
+
+### Get Input Constraints
+
+```javascript
+const model = getModelById('flux-dev');
+const widthInput = model.inputs.width;
+
+console.log(`Width range: ${widthInput.minValue} - ${widthInput.maxValue}`);
+console.log(`Step: ${widthInput.step}`);
+console.log(`Default: ${widthInput.default}`);
+// Output:
+// Width range: 128 - 2048
+// Step: 64
+// Default: 1024
+```
+
+### Build Dynamic UI
+
+```javascript
+const model = getModelById('midjourney-v7-text-to-image');
+
+// Create select for aspect ratio
+const aspectRatios = model.inputs.aspect_ratio.enum;
+const select = document.createElement('select');
+aspectRatios.forEach(ratio => {
+  const option = document.createElement('option');
+  option.value = ratio;
+  option.text = ratio;
+  if (ratio === model.inputs.aspect_ratio.default) {
+    option.selected = true;
+  }
+  select.appendChild(option);
+});
+```
+
+## Common Input Parameters
+
+### Prompt (T2I/T2V/I2I/I2V)
+
+```typescript
+prompt: {
+  type: 'string',
+  description: 'Text describing the desired output',
+  minLength?: 2,
+  maxLength?: 3000
+}
+```
+
+### Aspect Ratio
+
+```typescript
+aspect_ratio: {
+  type: 'string',
+  enum: ['1:1', '16:9', '9:16', '4:3', '3:4', '21:9', ...],
+  default: '1:1' | '16:9'
+}
+```
+
+### Resolution/Quality
+
+```typescript
+resolution: {
+  type: 'string',
+  enum: ['480p', '720p', '1080p'] | ['1k', '2k', '4k'],
+  default: '720p' | '1k'
+}
+
+quality: {
+  type: 'string',
+  enum: ['basic', 'high', 'medium'],
+  default: 'basic'
+}
+```
+
+### Duration (Video)
+
+```typescript
+duration: {
+  type: 'int',
+  enum: [5, 10, 15] | { minValue: 3, maxValue: 15, step: 1 },
+  default: 5
+}
+```
+
+### Number of Images
+
+```typescript
+num_images: {
+  type: 'int',
+  default: 1,
+  minValue: 1,
+  maxValue: 4
+}
+```
+
+### Image Dimensions (T2I)
+
+```typescript
+width: {
+  type: 'int',
+  default: 1024,
+  minValue: 256,
+  maxValue: 2048,
+  step: 64
+}
+
+height: {
+  type: 'int',
+  default: 1024,
+  minValue: 256,
+  maxValue: 2048,
+  step: 64
+}
+```
+
+## Model Families
+
+Models are grouped by family for UI organization:
+
+- `flux` - Flux models (Dev, Pro, Schnell, etc.)
+- `kontext` - Flux Kontext variants
+- `midjourney` - Midjourney v7 models
+- `seedream` - ByteDance Seedream series
+- `kling` - Kling video models
+- `runway` - Runway Gen-3
+- `tools` - Utility models (upscale, remove BG, etc.)
+- `nano` - Nano Banana models
+- `gpt` - OpenAI DALL-E models
+- `ideogram` - Ideogram models
+
+### Example: Filter by Family
+
+```javascript
+const fluxModels = t2iModels.filter(m => m.family === 'flux');
+const tools = i2iModels.filter(m => m.family === 'tools');
+```
+
+## Validation Example
+
+```javascript
+import { getModelById } from './lib/models.js';
+
+function validateParams(modelId, params) {
+  const model = getModelById(modelId);
+  if (!model) throw new Error(`Model ${modelId} not found`);
+  
+  const errors = [];
+  
+  // Check width constraint
+  const widthDef = model.inputs.width;
+  if (widthDef) {
+    if (params.width < widthDef.minValue || params.width > widthDef.maxValue) {
+      errors.push(`Width must be between ${widthDef.minValue} and ${widthDef.maxValue}`);
+    }
+    if (params.width % widthDef.step !== 0) {
+      errors.push(`Width must be divisible by ${widthDef.step}`);
+    }
+  }
+  
+  // Check aspect ratio
+  const arDef = model.inputs.aspect_ratio;
+  if (arDef && arDef.enum && !arDef.enum.includes(params.aspect_ratio)) {
+    errors.push(`Invalid aspect ratio. Must be one of: ${arDef.enum.join(', ')}`);
+  }
+  
+  return errors;
+}
+```
+
+## Complete Example
+
+```javascript
+import { 
+  getModelById, 
+  getAspectRatiosForModel,
+  getResolutionsForModel,
+  getQualityFieldForModel 
+} from './lib/models.js';
+
+const modelId = 'bytedance-seedream-v4';
+const model = getModelById(modelId);
+
+console.log('Name:', model.name);
+console.log('Endpoint:', model.endpoint || model.id);
+
+const aspectRatios = getAspectRatiosForModel(modelId);
+console.log('Aspect Ratios:', aspectRatios);
+
+const resolutions = getResolutionsForModel(modelId);
+const qualityField = getQualityFieldForModel(modelId);
+console.log(`${qualityField}:`, resolutions);
+// Output: resolution: ['1K', '2K', '4K']
+
+// Build payload
+const payload = {
+  prompt: 'A magical forest scene',
+  aspect_ratio: aspectRatios[0],
+  [qualityField]: resolutions[2] // '4K'
+};
+```

@@ -1,0 +1,427 @@
+---
+title: 'Multi-Image Input'
+description: 'Upload up to 14 reference images for advanced image-to-image editing with compatible AI models'
+icon: 'images'
+---
+
+Some image-to-image models support **multiple reference images** in a single generation, enabling advanced editing workflows like style transfer, composition, and multi-view editing.
+
+## Overview
+
+Multi-image input allows you to:
+
+<CardGroup cols={2}>
+  <Card title="Combine Multiple References" icon="layer-group">
+    Feed up to 14 images into a single generation for style transfer, composition, or multi-view editing.
+  </Card>
+  <Card title="Order-Based Processing" icon="arrow-down-1-9">
+    Images are processed in the order you select them, giving you control over priority and influence.
+  </Card>
+  <Card title="Batch Upload" icon="cloud-arrow-up">
+    Select multiple files at once from your file dialog for faster workflow.
+  </Card>
+  <Card title="Visual Selection" icon="square-check">
+    Checkboxes with order numbers show exactly which images are active and their processing order.
+  </Card>
+</CardGroup>
+
+## Supported Models
+
+Not all image-to-image models support multiple images. Here are the models with multi-image support and their maximum image counts:
+
+<Tabs>
+  <Tab title="High Capacity (7-14 images)">
+    | Model | Max Images | Key Features |
+    | --- | --- | --- |
+    | **Nano Banana 2 Edit** | 14 | Google Gemini · 1K/2K/4K resolution · Google Search enhancement |
+    | **Nano Banana Edit** | 10 | Original Nano Banana with multi-image support |
+    | **Flux Kontext Dev I2I** | 10 | High-quality context-aware editing |
+    | **Kling O1 Edit Image** | 10 | Kuaishou's editing model |
+    | **GPT-4o Edit** | 10 | OpenAI's multi-image editing |
+    | **GPT Image 1.5 Edit** | 10 | OpenAI's image editing model |
+    | **Bytedance Seedream Edit v4** | 10 | ByteDance editing with quality presets |
+    | **Bytedance Seedream Edit v4.5** | 10 | Enhanced version of v4 |
+    | **Vidu Q2 Reference to Image** | 7 | Chinese model with reference-based generation |
+  </Tab>
+  
+  <Tab title="Standard Capacity (4-8 images)">
+    | Model | Max Images | Key Features |
+    | --- | --- | --- |
+    | **Flux 2 Flex Edit** | 8 | Flexible editing model |
+    | **Flux 2 Pro Edit** | 8 | Professional editing quality |
+    | **Nano Banana Pro Edit** | 8 | Pro version with enhanced quality |
+    | **GPT-4o Image to Image** | 5 | OpenAI's I2I model |
+    | **Flux 2 Klein 4b Edit** | 4 | Compact model, 4 billion parameters |
+    | **Flux 2 Klein 9b Edit** | 4 | Larger compact model, 9 billion parameters |
+  </Tab>
+  
+  <Tab title="Low Capacity (2-3 images)">
+    | Model | Max Images | Key Features |
+    | --- | --- | --- |
+    | **Flux Kontext Pro I2I** | 2 | High-quality with 2 reference images |
+    | **Flux Kontext Max I2I** | 2 | Maximum quality, 2 images |
+    | **Wan 2.5 Image Edit** | 2 | Chinese model with dual reference |
+    | **Wan 2.6 Image Edit** | 3 | Enhanced version with 3 images |
+    | **Qwen Image Edit Plus** | 3 | Alibaba's editing model |
+    | **Qwen 2511 Edit** | 3 | Latest Qwen editing model |
+  </Tab>
+</Tabs>
+
+<Info>
+When you select a model that supports multiple images, the upload picker automatically switches to **multi-select mode** with checkboxes and order indicators.
+</Info>
+
+## How Multi-Select Works
+
+### Automatic Mode Switching
+
+The upload picker adapts based on the selected model:
+
+<Steps>
+  <Step title="Single-Image Mode (Default)">
+    When you select a model that supports only 1 image:
+    
+    - **Instant selection** — Click any image to select and close immediately
+    - **No checkboxes** — Simple click-to-select interaction
+    - **Replace on select** — New selection replaces previous
+  </Step>
+  
+  <Step title="Multi-Image Mode (Automatic)">
+    When you select a multi-image model like **Nano Banana 2 Edit**:
+    
+    - **Checkboxes appear** — Toggle multiple images on/off
+    - **Order numbers** — Each selected image shows its order (1, 2, 3...)
+    - **"Use Selected" button** — Confirm your selection
+    - **Count badge** — Trigger button shows how many images are selected
+    - **Capacity indicator** — "X of Y selected" in the panel
+  </Step>
+</Steps>
+
+### Using Multi-Select
+
+<Steps>
+  <Step title="Select a Multi-Image Model">
+    In Image Studio, click the model button and choose a model that supports multiple images (e.g., **Nano Banana 2 Edit** with 14 max images).
+    
+    The upload picker automatically switches to multi-select mode.
+  </Step>
+  
+  <Step title="Open Upload Picker">
+    Click the **upload button** (📤 icon) to open the reference image picker.
+  </Step>
+  
+  <Step title="Select Images in Order">
+    Click images to toggle them on/off:
+    
+    - **First click** → Image selected, shows badge "1"
+    - **Second click on another** → Shows badge "2"
+    - **Third click on another** → Shows badge "3"
+    - **Click selected image** → Deselect, order numbers reflow
+    
+    <Warning>
+    Images are sent to the model **in the order you select them**. Order can affect the result for some models (e.g., first image = primary reference, others = style/composition).
+    </Warning>
+  </Step>
+  
+  <Step title="Upload New Images (Optional)">
+    If you need more images, click **"Upload files"** (note: plural in multi-mode):
+    
+    - **Multi-file selection enabled** — Choose multiple files at once
+    - **Auto-upload** — All selected files upload in parallel
+    - **Auto-select** — Newly uploaded images are automatically selected (up to remaining slots)
+    - **Panel stays open** — Continue selecting more images
+  </Step>
+  
+  <Step title="Check Selection Status">
+    The panel shows your selection status:
+    
+    - **Bottom bar**: "3 of 14 selected"
+    - **Dimmed images**: Unselectable images when at max capacity
+    - **Count badge**: Trigger button shows "3" or "+" if room for more
+  </Step>
+  
+  <Step title="Confirm Selection">
+    Click the **"Use Selected"** button (appears in header and bottom bar) or **"Done (3)"** button to close the panel and confirm your selection.
+    
+    The trigger button updates to show:
+    - Thumbnail of first selected image
+    - Count badge ("3" in a yellow circle)
+  </Step>
+</Steps>
+
+## Upload Picker UI States
+
+### Trigger Button States
+
+<Tabs>
+  <Tab title="Empty State">
+    **Appearance**: Upload icon (📤), no border color
+    
+    **Tooltip**: "Add up to X images" (multi-mode) or "Reference image" (single-mode)
+    
+    **Action**: Opens picker panel
+  </Tab>
+  
+  <Tab title="Single Image Selected">
+    **Appearance**: Thumbnail visible, primary border glow
+    
+    **Badge**: 
+    - Checkmark (✓) in single-mode
+    - "+" badge in multi-mode (if more slots available)
+    - Count ("1") in multi-mode at capacity
+    
+    **Tooltip**: "1 image selected — click to add more" or "Reference image"
+    
+    **Action**: Opens picker to manage selection
+  </Tab>
+  
+  <Tab title="Multiple Images Selected">
+    **Appearance**: First image thumbnail, primary border glow
+    
+    **Badge**: Count badge showing "2", "3", etc. in yellow circle
+    
+    **Tooltip**: "X of Y images selected — click to manage"
+    
+    **Action**: Opens picker to adjust selection
+  </Tab>
+  
+  <Tab title="Uploading State">
+    **Appearance**: Spinner icon (◌), no thumbnail
+    
+    **Badge**: None
+    
+    **Tooltip**: No change
+    
+    **Action**: Disabled during upload
+  </Tab>
+</Tabs>
+
+### Panel States
+
+<Tabs>
+  <Tab title="Empty History">
+    **Content**: Empty state illustration with upload icon
+    
+    **Message**: "No uploads yet"
+    
+    **Action**: Click "Upload new" to add first images
+  </Tab>
+  
+  <Tab title="History Available (Single-Mode)">
+    **Content**: 3-column grid of thumbnail images
+    
+    **Interaction**: Click any thumbnail to instantly select and close
+    
+    **Hover**: Shows delete button (✕) to remove from history
+    
+    **Selected**: Checkmark badge (✓) on selected image
+  </Tab>
+  
+  <Tab title="History Available (Multi-Mode)">
+    **Content**: 3-column grid with checkboxes and order numbers
+    
+    **Interaction**: Click to toggle selection, order numbers appear (1, 2, 3...)
+    
+    **Hover**: Shows delete button (✕) to remove from history
+    
+    **Selected**: Yellow badge with order number ("1", "2", etc.)
+    
+    **At Capacity**: Unselected images dim and show "not-allowed" cursor
+    
+    **Bottom Bar**: Shows "X of Y selected" and "Use Selected" button
+  </Tab>
+</Tabs>
+
+## Upload Workflow
+
+### Batch Upload (Multi-Mode)
+
+<Steps>
+  <Step title="Open File Dialog">
+    Click "Upload files" in the picker panel.
+  </Step>
+  
+  <Step title="Select Multiple Files">
+    In the file dialog:
+    
+    - **Mac**: Cmd + Click or Shift + Click to select multiple
+    - **Windows/Linux**: Ctrl + Click or Shift + Click
+    
+    You can select up to the remaining slots (e.g., if 14 max and 4 selected, you can add up to 10 more).
+  </Step>
+  
+  <Step title="Upload Starts">
+    All selected files upload **in parallel** to Muapi.ai. The trigger button shows a spinner.
+  </Step>
+  
+  <Step title="Auto-Save to History">
+    Each uploaded image is automatically saved to upload history with:
+    
+    - **Hosted URL** from Muapi.ai
+    - **Thumbnail** (80x80px base64 JPEG)
+    - **Filename** and timestamp
+  </Step>
+  
+  <Step title="Auto-Select (Multi-Mode)">
+    Newly uploaded images are automatically added to your selection (up to the remaining slots).
+    
+    The picker panel **stays open** so you can continue adjusting your selection.
+  </Step>
+  
+  <Step title="Confirm Selection">
+    Click "Use Selected" to close the panel and proceed with generation.
+  </Step>
+</Steps>
+
+### Single Upload (Single-Mode)
+
+<Steps>
+  <Step title="Open File Dialog">
+    Click "Upload new" in the picker panel (or click the trigger when empty).
+  </Step>
+  
+  <Step title="Select One File">
+    Choose a single image file.
+  </Step>
+  
+  <Step title="Upload & Save">
+    The image uploads to Muapi.ai and saves to history.
+  </Step>
+  
+  <Step title="Auto-Select & Close">
+    The image is automatically selected and the picker **closes immediately**. The `onSelect` callback fires with the image URL.
+  </Step>
+</Steps>
+
+## Reordering Images
+
+Currently, images are ordered by **selection order**. To reorder:
+
+1. **Deselect all images** — Click each selected image to deselect
+2. **Reselect in desired order** — Click images in the new order (1, 2, 3...)
+
+<Info>
+A drag-and-drop reordering UI is planned for a future update. For now, use the click-to-reorder workflow above.
+</Info>
+
+## Upload History Integration
+
+Multi-image input is tightly integrated with [Upload History](/features/upload-history):
+
+- **No re-uploading** — All uploaded images are saved to history and reused across sessions
+- **Persistent storage** — Up to 20 uploads saved in browser localStorage
+- **Cross-studio access** — Upload history is shared between Image Studio and Video Studio
+- **Thumbnail generation** — 80x80px thumbnails generated client-side for fast preview
+
+## API Integration
+
+When you generate with multiple images, the API receives all image URLs in a single request:
+
+```javascript
+const result = await muapi.generateI2I({
+  model: 'nano-banana-2-edit',
+  images_list: [
+    'https://api.muapi.ai/uploads/img1.jpg',
+    'https://api.muapi.ai/uploads/img2.jpg',
+    'https://api.muapi.ai/uploads/img3.jpg'
+  ],
+  image_url: 'https://api.muapi.ai/uploads/img1.jpg', // backward compat
+  prompt: 'Combine these styles into a single image',
+  aspect_ratio: '1:1',
+  resolution: '2k'
+});
+```
+
+<Note>
+The `image_url` field is included for backward compatibility with single-image models. Multi-image models use the `images_list` array.
+</Note>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Choosing the Right Number of Images">
+    - **2-3 images** — Best for style transfer (content + style references)
+    - **4-6 images** — Good for composition and multi-view editing
+    - **7-10 images** — Advanced workflows like mood boards or multi-reference generation
+    - **10-14 images** — Experimental, for models like Nano Banana 2 Edit
+    
+    <Warning>
+    More images ≠ better results. Start with 2-3 images and add more only if needed.
+    </Warning>
+  </Accordion>
+  
+  <Accordion title="Image Order Matters">
+    For most models:
+    
+    - **First image** = Primary reference (content, composition)
+    - **Second image** = Secondary reference (style, color palette)
+    - **Remaining images** = Additional influences (textures, details, mood)
+    
+    Experiment with different orders to see how models prioritize references.
+  </Accordion>
+  
+  <Accordion title="Image Quality & Size">
+    - **Upload high-resolution images** — Better input = better output
+    - **Mix sizes OK** — Models handle different resolutions
+    - **Aspect ratios** — No need to match; models adapt
+    - **File formats** — JPEG, PNG, WebP all supported
+  </Accordion>
+  
+  <Accordion title="Prompting with Multiple Images">
+    - **Be specific** — "Use the composition from the first image and colors from the second"
+    - **Reference order** — "Apply the style of image 2 to the subject in image 1"
+    - **Describe intent** — "Combine these into a cohesive portrait"
+    - **Experiment** — Try with and without prompts to see what works
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Multi-select not appearing">
+    **Cause**: You selected a single-image model
+    
+    **Solution**: Switch to a multi-image model (e.g., Nano Banana 2 Edit, Flux Kontext Dev I2I)
+  </Accordion>
+  
+  <Accordion title="Images dimmed / can't select more">
+    **Cause**: You've reached the max image capacity for the selected model
+    
+    **Solution**: Deselect some images or switch to a model with higher capacity
+  </Accordion>
+  
+  <Accordion title="Order numbers not updating">
+    **Cause**: Cached state or UI not re-rendering
+    
+    **Solution**: Deselect all and reselect, or close and reopen the picker
+  </Accordion>
+  
+  <Accordion title="Upload fails for multiple files">
+    **Cause**: Network issue, file too large, or invalid format
+    
+    **Solution**:
+    - Check file sizes (keep under 10MB per image)
+    - Ensure files are valid images (JPEG, PNG, WebP)
+    - Try uploading files one at a time
+  </Accordion>
+</AccordionGroup>
+
+## Keyboard Shortcuts
+
+- **Escape** — Close picker panel
+- **Enter** (when picker open) — Click "Use Selected" (multi-mode)
+- **Tab** — Navigate between images in picker
+
+## Related Features
+
+<CardGroup cols={3}>
+  <Card title="Image Studio" icon="image" href="/features/image-studio">
+    Learn about image-to-image generation
+  </Card>
+  <Card title="Upload History" icon="clock-rotate-left" href="/features/upload-history">
+    Manage and reuse uploaded images
+  </Card>
+  <Card title="Generation History" icon="timeline" href="/features/generation-history">
+    Browse past generations
+  </Card>
+</CardGroup>
